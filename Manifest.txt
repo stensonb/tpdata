@@ -3,8 +3,8 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/tpds
-lib/tpds.rb
+bin/tpdata
+lib/tpdata.rb
 spec/spec_helper.rb
 spec/tpds_spec.rb
-test/test_tpds.rb
+test/test_tpdata.rb
