@@ -40,9 +40,11 @@ module ThePlatform
       set_header @options
       self.class.put("/#{object}", query: options, body: body)
     end
-
-    # def delete
-    # end
+    #media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'BenWoodall (VMS)')
+    def delete(object,id=[],options={})
+      self.class.base_uri @endpoint
+      self.class.delete("/#{object}/#{id}", query: options)
+    end
 
     private
 
