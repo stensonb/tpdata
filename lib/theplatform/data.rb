@@ -16,22 +16,28 @@ module ThePlatform
         define_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
       end
     end
+
     # ThePlatform::Data.mds.get('Category','12744085', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0TC9UBD7EPDm')
     def get(object, id=[],options={})
       self.class.base_uri @endpoint
       self.class.get("/#{object}/#{id}", query: options)
     end
 
-    # def post(body)
-    #   self.class.base_uri @endpoint
-    #   self.class.post("/#{object}",  query: body)
-    # end
-
-    def put(object, body, options={})
-      # options = {body: body, query: {schema: '1.4.0', form: 'json', token: 'ZvQnJThMUUp5w1BxkpgJkaAZYCD-8MCN'}}
+    # media.post('Media', '{"title":"First POST using the RUBYds","ownerId":"http://access.auth.theplatform.com/data/Account/2077866628"}',
+    #             schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'BenWoodall (VMS)')
+    def post(object, body, options={})
       @options = options
       self.class.base_uri @endpoint
-      set_header(@options)
+      set_header @options
+      self.class.post("/#{object}", query: options, body: body)
+    end
+
+    # media.put('Media', '{"id":""http://data.media.theplatform.com/media/data/Media/27550715"","title":"test"}',
+    #             schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'BenWoodall (VMS)')
+    def put(object, body, options={})
+      @options = options
+      self.class.base_uri @endpoint
+      set_header @options
       self.class.put("/#{object}", query: options, body: body)
     end
 
