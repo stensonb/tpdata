@@ -10,7 +10,7 @@ module ThePlatform
 
 
     (class << self; self; end).instance_eval do
-      @service.keys.each do |data|
+      SERVICE.keys.each do |data|
         define_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
       end
     end
