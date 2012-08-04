@@ -1,0 +1,11 @@
+Manifest.txt
+README.markdown
+Rakefile
+bin/tpdata
+lib/theplatform.rb
+lib/theplatform/data.rb
+lib/theplatform/identity.rb
+lib/theplatform/services.rb
+spec/identity_spec.rb
+spec/spec_helper.rb
+
