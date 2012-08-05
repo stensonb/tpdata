@@ -1,5 +1,5 @@
 Manifest.txt
-README.markdownma
+README.markdown
 Rakefile
 bin/tpdata
 lib/theplatform.rb
