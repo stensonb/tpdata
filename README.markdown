@@ -51,6 +51,8 @@ token = t.token(schema: '1.0', form: 'json')
 Valid paramters for token are the schema type (schema) and format (form).  Visit http://help.theplatform.com for more information.
 
 ### Data Services
+A list of endpoints and valid objects are available at http://help.theplatform.com.  Internally, they are listed in the services.rb file.
+
 In this example, we're going to build a query for the Media Data Service (MDS):
 ``` ruby
 media = ThePlatform::Data.mds
