@@ -16,7 +16,9 @@ module ThePlatform
     end
 
     # GET call for data Object.
+    #
     # This is built by passing the Object, the comma delimited IDs, and the RESTful parameters.
+    #
     # Needed paramters are: schema, form, and token
     #
     # ThePlatform::Data.mds.get('Category','1278889', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd')
@@ -26,7 +28,9 @@ module ThePlatform
     end
 
     # POST to create new Objects.
+    #
     # Posts are created by passing the Object type, and a String object of the POST body.
+    #
     # Needed parameters are: schema, form, token, and account.
     #
     # ThePlatform.Data.mds.post('Media', '{"title":"First POST using the RUBYds","ownerId":"http://access.auth.theplatform.com/data/Account/2011111628"}',
@@ -39,7 +43,9 @@ module ThePlatform
     end
 
     # PUT to edit Objects.
+    #
     # Put needs the Object type and String body.
+    #
     # Needed parameters: schema, form, token, and account.
     #
     # ThePlatform::Data.mds.put('Media', '{"id":""http://data.media.theplatform.com/media/data/Media/27444715"","title":"test"}',
@@ -52,9 +58,12 @@ module ThePlatform
     end
 
     # DELETE objects
+    #
     # To DELETE Objects, pass the Object type and comma separated IDs
+    #
     # Needed parameters: schema, form, token, and account
-    #media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'BenWoodall (VMS)')
+    #
+    # media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
       self.class.base_uri @endpoint
       self.class.delete("/#{object}/#{id}", query: options)
