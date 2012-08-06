@@ -4,7 +4,7 @@ require 'httparty'
 
 module ThePlatform
 
-  VERSION = '0.0.0'
+  VERSION = '0.8.1'
 
   require 'theplatform/services'
   require 'theplatform/identity'

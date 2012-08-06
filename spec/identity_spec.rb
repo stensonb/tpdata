@@ -5,7 +5,7 @@ describe 'Identity' do
   # Created without Mocks.  Using creds instead for now
 
   before(:each) do
-    @session = ThePlatform::Identity.new(:username => 'ben.woodall@theplatform.com', :password => 'Behilikus420')
+    @session = ThePlatform::Identity.new(:username => 'ben.woodall@theplatform.com', :password => 'S3cr3t')
   end
 
   describe "token" do
