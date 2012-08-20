@@ -1,13 +1,15 @@
 module ThePlatform
 
+  # Class to RESTfully interface with thePlatform's API
+  #    ThePlatform::Data#
   class Data
     include HTTParty
 
-    # FIXME
     class << self
 
       attr_accessor :schema, :form, :token
 
+      # Set the different available params to configure
       def keys
         @keys ||= [
           :schema,
@@ -16,12 +18,21 @@ module ThePlatform
           ]
       end
 
-      # FIXME Chapter in Metaprogramming about moving ivals to methods!
+      # Allows for a Rails type configuration setup
+      #
+      #    ThePlatform::Data.configure do |config|
+      #      config.schema = '1.4.0'
+      #      config.form = 'cjson'
+      #      config.token = 'o4VThP--IcaKwltckmgdw544KD0kKDg'
+      #    end
+      #    =>  {:schema=>"1.4.0", :form=>"json", :token=>"o4VThP--IcaKwltckmgdw544KD0kKDg"}
+      #
       def configure
         yield self
-        self
+        parameters
       end
 
+      # Returns true or false if all parameters are set.  Only valuable if you want all 3 set.
       def parameters?
         parameters.values.all?
       end
@@ -33,6 +44,7 @@ module ThePlatform
       @objects  = params[:objects]
     end
 
+    # MetaMagic to initialize SERVICE hash into methods to create SERVICE objects
     (class << self; self; end).instance_eval do
       SERVICE.keys.each do |data|
         define_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
@@ -45,11 +57,10 @@ module ThePlatform
     #
     # Needed paramters are: schema, form, and token
     #
-    # ThePlatform::Data.mds.get('Category','1278889', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd')
+    #    ThePlatform::Data.mds.get('Category','1278889', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd')
     def get(object, id=[],options={})
-      @options = options
       self.class.base_uri @endpoint
-      self.class.get("/#{object}/#{id}", query: @options)
+      self.class.get("/#{object}/#{id}", query: options.merge(ThePlatform::Data.parameters))
     end
 
     # POST to create new Objects.
@@ -58,13 +69,13 @@ module ThePlatform
     #
     # Needed parameters are: schema, form, token, and account.
     #
-    # ThePlatform.Data.mds.post('Media', '{"title":"First POST using the RUBYds","ownerId":"http://access.auth.theplatform.com/data/Account/2011111628"}',
-    #             schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
+    #    the_body = '{'title':'Using the RUBYds',"ownerId":"http://access.auth.theplatform.com/data/Account/2011111628"}'
+    #    ThePlatform::Data.mds.put('Media', the_body,
+    #      schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def post(object, body, options={})
-      @options = options
       self.class.base_uri @endpoint
-      set_header @options
-      self.class.post("/#{object}", query: @options, body: body)
+      set_header options
+      self.class.post("/#{object}", query: options.merge(ThePlatform::Data.parameters), body: body)
     end
 
     # PUT to edit Objects.
@@ -73,13 +84,13 @@ module ThePlatform
     #
     # Needed parameters: schema, form, token, and account.
     #
-    # ThePlatform::Data.mds.put('Media', '{"id":""http://data.media.theplatform.com/media/data/Media/27444715"","title":"test"}',
-    #             schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
+    #    the_body = '{"id":""http://data.media.theplatform.com/media/data/Media/27444715"","title":"test"}'
+    #    ThePlatform::Data.mds.put('Media', the_body,
+    #      schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def put(object, body, options={})
-      @options = options
       self.class.base_uri @endpoint
-      set_header @options
-      self.class.put("/#{object}", query: @options, body: body)
+      set_header options
+      self.class.put("/#{object}", query: options.merge(ThePlatform::Data.parameters), body: body)
     end
 
     # DELETE objects
@@ -88,11 +99,11 @@ module ThePlatform
     #
     # Needed parameters: schema, form, token, and account
     #
-    # media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
+    #    ThePlatform::Data.mds.delete('Media','27550715', schema:'1.4.0',form:'cjson',
+    #      token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
-      @options = options
       self.class.base_uri @endpoint
-      self.class.delete("/#{object}/#{id}", query: options)
+      self.class.delete("/#{object}/#{id}", query: options.merge(ThePlatform::Data.parameters))
     end
 
     private
@@ -113,10 +124,6 @@ module ThePlatform
         form:   @form,
         token:  @token
       }
-    end
-
-    def self.options
-      Hash[ThePlatform::Data.keys.map { |key| [key, instance_variable_get(:"@#{key}")] } ]
     end
 
   end

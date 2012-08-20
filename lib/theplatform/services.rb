@@ -1,7 +1,9 @@
 module ThePlatform
 
+  # URI for Identity service
   IDENTITY = "https://identity.auth.theplatform.com/idm/web/Authentication/"
 
+  # Hash containing Data Services, along with their available objects
   SERVICE =
     {
       :accessadmin  => { :endpoint => 'http://access.auth.theplatform.com/data/',

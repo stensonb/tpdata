@@ -1,5 +1,7 @@
 module ThePlatform
 
+  # Class to RESTfully interface with thePlatform's Identity API
+  #    ThePlatform::Identity#
   class Identity
     include HTTParty
 
