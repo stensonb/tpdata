@@ -3,11 +3,22 @@ module ThePlatform
   class Data
     include HTTParty
 
+    # FIXME
+    class << self
+      attr_accessor :schema, :form, :token
+    end
+
     def initialize(params={})
       @endpoint = params[:endpoint]
       @objects  = params[:objects]
     end
 
+    # FIXME Chapter in Metaprogramming about moving ivals to methods!
+    def self.configure
+      yield self
+      # "@schema = #{self.schema}, @form = #{self.form}, @token = #{self.token}"
+      # @options = [schema: self.schema, form: self.form, token: self.token]
+    end
 
     (class << self; self; end).instance_eval do
       SERVICE.keys.each do |data|
@@ -23,8 +34,9 @@ module ThePlatform
     #
     # ThePlatform::Data.mds.get('Category','1278889', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd')
     def get(object, id=[],options={})
+      @options = options
       self.class.base_uri @endpoint
-      self.class.get("/#{object}/#{id}", query: options)
+      self.class.get("/#{object}/#{id}", query: @options)
     end
 
     # POST to create new Objects.
@@ -39,7 +51,7 @@ module ThePlatform
       @options = options
       self.class.base_uri @endpoint
       set_header @options
-      self.class.post("/#{object}", query: options, body: body)
+      self.class.post("/#{object}", query: @options, body: body)
     end
 
     # PUT to edit Objects.
@@ -54,7 +66,7 @@ module ThePlatform
       @options = options
       self.class.base_uri @endpoint
       set_header @options
-      self.class.put("/#{object}", query: options, body: body)
+      self.class.put("/#{object}", query: @options, body: body)
     end
 
     # DELETE objects
@@ -65,6 +77,7 @@ module ThePlatform
     #
     # media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
+      @options = options
       self.class.base_uri @endpoint
       self.class.delete("/#{object}/#{id}", query: options)
     end
