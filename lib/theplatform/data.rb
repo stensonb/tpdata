@@ -5,19 +5,32 @@ module ThePlatform
 
     # FIXME
     class << self
+
       attr_accessor :schema, :form, :token
+
+      def keys
+        @keys ||= [
+          :schema,
+          :form,
+          :token
+          ]
+      end
+
+      # FIXME Chapter in Metaprogramming about moving ivals to methods!
+      def configure
+        yield self
+        self
+      end
+
+      def parameters?
+        parameters.values.all?
+      end
+
     end
 
     def initialize(params={})
       @endpoint = params[:endpoint]
       @objects  = params[:objects]
-    end
-
-    # FIXME Chapter in Metaprogramming about moving ivals to methods!
-    def self.configure
-      yield self
-      # "@schema = #{self.schema}, @form = #{self.form}, @token = #{self.token}"
-      # @options = [schema: self.schema, form: self.form, token: self.token]
     end
 
     (class << self; self; end).instance_eval do
@@ -92,6 +105,18 @@ module ThePlatform
       elsif option[:form] == 'rss'
         self.class.headers 'Content-Type' => 'application/rss+xml'
       end
+    end
+
+    def self.parameters
+      {
+        schema: @schema,
+        form:   @form,
+        token:  @token
+      }
+    end
+
+    def self.options
+      Hash[ThePlatform::Data.keys.map { |key| [key, instance_variable_get(:"@#{key}")] } ]
     end
 
   end
