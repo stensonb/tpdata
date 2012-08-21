@@ -27,7 +27,7 @@ module ThePlatform
     # duration: and timeout: are optional.  Resorts to thePlatform defaults if not defined
     def token(options = {})
       self.class.base_uri IDENTITY
-      self.class.get("/signIn?username=#{@username}&password=#{@password}", query: options)
+      self.class.get("/signIn", query: options.merge(ThePlatform::Identity.parameters))
     end
 
     # Invalidate a given Token
@@ -35,15 +35,15 @@ module ThePlatform
     # ThePlatform::Identity.new.invalidate!(token, schema:'1.0', form:'(json|xml|rss)')
     def invalidate!(tokens, options = {})
       self.class.base_uri IDENTITY
-      self.class.get("/signOut?_token=#{tokens}", query: options)
+      self.class.get("/signOut?_token=#{tokens}", query: options.merge(ThePlatform::Identity.parameters))
     end
 
     # Return the number of tokens in an account.
     #
     # ThePlatform::Identity.new(username:'USERNAME', password:'PASSWORD').count(schema:'1.0', form:'(json|xml|rss)')
-    def count(options)
+    def count(options = {})
       self.class.base_uri IDENTITY
-      self.class.get("/getTokenCount?username=#{@username}&password=#{@password}", query: options)
+      self.class.get("/getTokenCount", query: options.merge(ThePlatform::Identity.parameters))
     end
 
   end

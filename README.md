@@ -51,7 +51,7 @@ To request a token:
 
     # Note that you there are 4 available options to set: username and password (which are required), duration, and timeout.
 
-    token = t.token(schema: '1.0', form: 'json')
+    t.token(schema: '1.0', form: 'json')
     => {"signInResponse"=>
     {"userName"=>"your_username",
     "duration"=>315360000000,
