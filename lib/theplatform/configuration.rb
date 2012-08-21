@@ -28,7 +28,7 @@ module ThePlatform
       @values
     end
 
-    # Returns true or false if all parameters are set.  Only valuable if you want all 3 set.
+    # Returns true or false if all parameters are set.
     def parameters?
       parameters.values.all?
     end
