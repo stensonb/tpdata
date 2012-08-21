@@ -19,6 +19,26 @@ To add Tpdata gem:
 
     require 'theplatform'
 
+### Configuration
+Both endpoints (::Data and ::Identity) support the #configure methods to build instance variables on a per object basis.
+
+    ThePlatform::Data.configure do |config|
+      config.schema = '1.4.0'
+      config.form   = 'cjson'
+      config.token  = 'rDGZTYyxjGqjfEXNsphawfAqIdfdDDff'
+    end
+    => {:schema=>"1.4.0", :form=>"cjson", :token=>"rDGZTYyxjGqjfEXNsphawfAqIdfdDDff"}
+
+To list the available params to configure:
+
+    ThePlatform::Identity.parameters
+    => {:schema=>"1.4.0", :form=>"cjson", :token=>"rDGZTYyxjGqjfEXNsphawfAqIdfdDDff"}
+
+The boolean methods #parameters? is also available to query if all params are set:
+
+    ThePlatform::Identity.parameters?
+    => true
+
 ### Tokens
 To request a token:
 
