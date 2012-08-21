@@ -102,7 +102,6 @@ A DELETE:
 Needed params here are the Object, Object ID(s), schema, form, token, and account.
 
 ## ToDo:
-* Add a Rails style ThePlatform#configure method to allow for constantly used params.
 * Add SELF to the Identity endpoints
 * Unit::Tests and Specs for all.  Use mocks instead of live data!
 
