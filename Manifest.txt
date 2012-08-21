@@ -3,6 +3,7 @@ README.markdown
 Rakefile
 bin/tpdata
 lib/theplatform.rb
+lib/theplatform/configuration.rb
 lib/theplatform/data.rb
 lib/theplatform/identity.rb
 lib/theplatform/services.rb

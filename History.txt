@@ -1,6 +1,0 @@
-=== 1.0.0 / 2012-05-04
-
-* Initial commit
-* Creation of ThePlatform module
-* Requirments for Faraday API
-
