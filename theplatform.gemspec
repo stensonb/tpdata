@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.date             = '2012-08-10'
   s.authors          = ['Ben Woodall']
   s.email            = 'ben.woodall@theplatform.com'
-  s.homepage         = 'https://github.com/benwoody'
+  s.homepage         = 'git://ln.benwoodall.com/tpdata.git'
 
   s.summary          = %q{RESTful wrapper for thePlatform}
   s.description      = %q{Tpdata gem is a wrapper for the RESTful interface for thePlatform for Media's Data Services.}
