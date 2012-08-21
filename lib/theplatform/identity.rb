@@ -4,6 +4,7 @@ module ThePlatform
   #    ThePlatform::Identity#
   class Identity
     include HTTParty
+    extend ThePlatform::Configuration
 
     # username: and password: are required to build a new Identity object.  duration: and timeout: can be added
     # but if they are missing from the params, it will default to thePlatforms default values.
@@ -12,6 +13,11 @@ module ThePlatform
       @password = params[:password]
       @duration = params[:duration]
       @timeout  = params[:timeout]
+    end
+
+    # Set the different available params to configure
+    def self.keys
+      @keys ||= [:schema, :form, :username, :password, :duration, :timeout]
     end
 
     # Return ALL THE TOKEN!

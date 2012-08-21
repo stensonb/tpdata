@@ -4,44 +4,16 @@ module ThePlatform
   #    ThePlatform::Data#
   class Data
     include HTTParty
-
-    class << self
-
-      attr_accessor :schema, :form, :token
-
-      # Set the different available params to configure
-      def keys
-        @keys ||= [
-          :schema,
-          :form,
-          :token
-          ]
-      end
-
-      # Allows for a Rails type configuration setup
-      #
-      #    ThePlatform::Data.configure do |config|
-      #      config.schema = '1.4.0'
-      #      config.form = 'cjson'
-      #      config.token = 'o4VThP--IcaKwltckmgdw544KD0kKDg'
-      #    end
-      #    =>  {:schema=>"1.4.0", :form=>"json", :token=>"o4VThP--IcaKwltckmgdw544KD0kKDg"}
-      #
-      def configure
-        yield self
-        parameters
-      end
-
-      # Returns true or false if all parameters are set.  Only valuable if you want all 3 set.
-      def parameters?
-        parameters.values.all?
-      end
-
-    end
+    extend ThePlatform::Configuration
 
     def initialize(params={})
       @endpoint = params[:endpoint]
       @objects  = params[:objects]
+    end
+
+    # Set the different available params to configure
+    def self.keys
+      @keys ||= [:schema, :form, :token]
     end
 
     # MetaMagic to initialize SERVICE hash into methods to create SERVICE objects
@@ -116,14 +88,6 @@ module ThePlatform
       elsif option[:form] == 'rss'
         self.class.headers 'Content-Type' => 'application/rss+xml'
       end
-    end
-
-    def self.parameters
-      {
-        schema: @schema,
-        form:   @form,
-        token:  @token
-      }
     end
 
   end
