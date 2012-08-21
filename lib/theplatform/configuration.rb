@@ -1,4 +1,6 @@
 module ThePlatform
+
+  # Module to extend to other Classes in order to set up #configuration on a per object basis
   module Configuration
 
     extend self
@@ -30,7 +32,6 @@ module ThePlatform
     def parameters?
       parameters.values.all?
     end
-
 
     private
 
