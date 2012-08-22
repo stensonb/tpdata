@@ -11,13 +11,13 @@ module ThePlatform
     def initialize(params = {})
       @username = params[:username]
       @password = params[:password]
-      @duration = params[:duration]
-      @timeout  = params[:timeout]
+      @duration = params[:_duration]
+      @timeout  = params[:_idleTimeout]
     end
 
     # Set the different available params to configure
     def self.keys
-      @keys ||= [:schema, :form, :username, :password, :duration, :timeout]
+      @keys ||= [:schema, :form, :username, :password, :_duration, :_idleTimeout]
     end
 
     # Return ALL THE TOKEN!

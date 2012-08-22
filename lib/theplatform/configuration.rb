@@ -5,7 +5,7 @@ module ThePlatform
 
     extend self
 
-    attr_accessor :schema, :form, :token, :username, :password, :duration, :timeout
+    attr_accessor :schema, :form, :token, :username, :password, :_duration, :_idleTimeout
 
     # Allows for a Rails type configuration setup.  Different object make different configurations.
     #
