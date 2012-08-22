@@ -108,3 +108,6 @@ Needed params here are the Object, Object ID(s), schema, form, token, and accoun
 ## LICENSE:
 
 Copyright (c) 2012 Ben Woodall
+
+Code hosted at git://ln.benwoodall.com/tpdata.git as ReadOnly.
+For Write access or send-email diffs: mail@benwoodall.com
