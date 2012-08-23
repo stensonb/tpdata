@@ -6,49 +6,44 @@ module ThePlatform
     include HTTParty
     extend ThePlatform::Configuration
 
-    # username: and password: are required to build a new Identity object.  duration: and timeout: can be added
-    # but if they are missing from the params, it will default to thePlatforms default values.
-    def initialize(params = {})
-      @username = params[:username]
-      @password = params[:password]
-      @duration = params[:_duration]
-      @timeout  = params[:_idleTimeout]
-    end
+    class << self
 
-    # Set the different available params to configure
-    def self.keys
-      @keys ||= [:schema, :form, :username, :password, :_duration, :_idleTimeout]
-    end
+      # Set the different available params to configure
+      def keys
+        @keys ||= [:schema, :form, :username, :password, :_duration, :_idleTimeout]
+      end
 
-    # Return ALL THE TOKEN!
-    #
-    # ThePlatform::Identity.new(username:'USERNAME', password:'PASSWORD').token(schema:'1.0', form:'(json|xml|rss)')
-    #
-    # duration: and timeout: are optional.  Resorts to thePlatform defaults if not defined
-    def token(options = {})
-      self.class.base_uri IDENTITY
-      self.class.get("/signIn", query: extras.merge(options))
-    end
+      # Return ALL THE TOKEN!
+      #
+      # ThePlatform::Identity.token(username:'USERNAME', password:'PASSWORD', schema:'1.0', form:'(json|xml|rss)')
+      #
+      # _duration: and _idleTimeout: are optional.  Resorts to thePlatform defaults if not defined
+      def token(options = {})
+        base_uri IDENTITY
+        get("/signIn", query: extras.merge(options))
+      end
 
-    # Invalidate a given Token
-    #
-    # ThePlatform::Identity.new.invalidate!(token, schema:'1.0', form:'(json|xml|rss)')
-    def invalidate!(tokens, options = {})
-      self.class.base_uri IDENTITY
-      self.class.get("/signOut?_token=#{tokens}", query: extras.merge(options))
-    end
+      # Invalidate a given Token
+      #
+      # ThePlatform::Identity.invalidate!(token, schema:'1.0', form:'(json|xml|rss)')
+      def invalidate!(tokens, options = {})
+        base_uri IDENTITY
+        get("/signOut?_token=#{tokens}", query: extras.merge(options))
+      end
 
-    # Return the number of tokens in an account.
-    #
-    # ThePlatform::Identity.new(username:'USERNAME', password:'PASSWORD').count(schema:'1.0', form:'(json|xml|rss)')
-    def count(options = {})
-      self.class.base_uri IDENTITY
-      self.class.get("/getTokenCount", query: extras.merge(options))
+      # Return the number of tokens in an account.
+      #
+      # ThePlatform::Identity.count(username:'USERNAME', password:'PASSWORD',schema:'1.0', form:'(json|xml|rss)')
+      def count(options = {})
+        base_uri IDENTITY
+        get("/getTokenCount", query: extras.merge(options))
+      end
+
     end
 
     private
 
-    def extras
+    def self.extras
       ThePlatform::Identity.parameters
     end
 

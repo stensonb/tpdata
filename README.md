@@ -42,16 +42,7 @@ The boolean methods #parameters? is also available to query if all params are se
 ### Tokens
 To request a token:
 
-    t = ThePlatform::Identity.new(username:'your_username', password:'your_password')
-    => #<ThePlatform::Identity:0x007fda9e1d2f88
-     @duration=nil,
-     @password="your_password",
-     @timeout=nil,
-     @username="your_username">
-
-    # Note that you there are 4 available options to set: username and password (which are required), duration, and timeout.
-
-    t.token(schema: '1.0', form: 'json')
+    ThePlatform::Identity.token(username:'your_username', password:'your_password',schema:'1.0',form:'json')
     => {"signInResponse"=>
     {"userName"=>"your_username",
     "duration"=>315360000000,
@@ -60,7 +51,7 @@ To request a token:
     "https://identity.auth.theplatform.com/idm/data/User/mps/123456789",
     "idleTimeout"=>1209600000}}
 
-Valid paramters for token are the schema type (schema) and format (form).  Visit http://help.theplatform.com for more information.
+Note that you can also set _duration and _idleTimeout as well.  Visit http://help.theplatform.com for more information.
 
 ### Data Services
 A list of endpoints and valid objects are available at http://help.theplatform.com.  Internally, they are listed in the services.rb file.
@@ -85,7 +76,9 @@ To build the query for a GET:
 
     media.get('Category','12744085', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0TC9UBD7EPDm')
 
-Needed parameters are the Objects, Object ID(s), Schema, Form, and the Token (which can be built through the identity service)
+Needed parameters are the Objects, Object ID(s), Schema, Form, and the Token (which can be built through the ThePlatform::Identity)
+
+To request all object, give an empty String to the id param.  To return multiple objects, pass a String with comma separated IDs.
 
 A POST:
 
