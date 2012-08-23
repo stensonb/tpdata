@@ -32,7 +32,7 @@ module ThePlatform
     #    ThePlatform::Data.mds.get('Category','1278889', schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd')
     def get(object, id=[],options={})
       self.class.base_uri @endpoint
-      self.class.get("/#{object}/#{id}", query: options.merge(ThePlatform::Data.parameters))
+      self.class.get("/#{object}/#{id}", query: extras.merge(options))
     end
 
     # POST to create new Objects.
@@ -47,7 +47,7 @@ module ThePlatform
     def post(object, body, options={})
       self.class.base_uri @endpoint
       set_header options
-      self.class.post("/#{object}", query: options.merge(ThePlatform::Data.parameters), body: body)
+      self.class.post("/#{object}", query: extras.merge(options), body: body)
     end
 
     # PUT to edit Objects.
@@ -62,7 +62,7 @@ module ThePlatform
     def put(object, body, options={})
       self.class.base_uri @endpoint
       set_header options
-      self.class.put("/#{object}", query: options.merge(ThePlatform::Data.parameters), body: body)
+      self.class.put("/#{object}", query: extras.merge(options), body: body)
     end
 
     # DELETE objects
@@ -75,7 +75,7 @@ module ThePlatform
     #      token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
       self.class.base_uri @endpoint
-      self.class.delete("/#{object}/#{id}", query: options.merge(ThePlatform::Data.parameters))
+      self.class.delete("/#{object}/#{id}", query: extras.merge(options))
     end
 
     private
@@ -88,8 +88,12 @@ module ThePlatform
       elsif option[:form] == 'rss'
         self.class.headers 'Content-Type' => 'application/rss+xml'
       end
+
     end
 
+    def extras
+      ThePlatform::Data.parameters
+    end
   end
 
 end
