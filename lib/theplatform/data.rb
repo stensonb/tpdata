@@ -26,16 +26,16 @@ module ThePlatform
     # GET call for data Object.
     #
     # This is built by passing the Object, the comma delimited IDs, and the RESTful parameters.
-    # To return all the Objects, pass an empty string ('') for the id param.
+    # To return all the Objects, pass 'all' for the id param.
     #
     # Needed paramters are: schema, form, and token
     #
     #    ThePlatform::Data.mds.get('Category','1278889',schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd',account:'my_account')
     # or
-    #    ThePlatform::Data.mds.get('Category','',schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd',account:'my_account')
+    #    ThePlatform::Data.mds.get('Category','all',schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd',account:'my_account')
     def get(object, id=[],options={})
       self.class.base_uri @endpoint
-      set_id = "/#{id}" unless id.empty?
+      set_id = "/#{id}" unless id =~ /all/i
       self.class.get("/#{object}#{set_id}", query: extras.merge(options))
     end
 

@@ -78,7 +78,7 @@ To build the query for a GET:
 
 Needed parameters are the Objects, Object ID(s), Schema, Form, and the Token (which can be built through the ThePlatform::Identity)
 
-To request all object, give an empty String to the id param.  To return multiple objects, pass a String with comma separated IDs.
+To request all objects, pass 'all' to the id param.  To return multiple objects, pass a String with comma separated IDs.
 
 A POST:
 
