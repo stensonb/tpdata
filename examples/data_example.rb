@@ -1,4 +1,4 @@
-require 'theplatform'
+require './lib/theplatform.rb'
 
 # request a new token!
 token = ThePlatform::Identity.token(username:'my_username',password:'my_password',schema:'1.0',form:'json')
