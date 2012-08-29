@@ -1,5 +1,5 @@
 $:.push File.expand_path("../lib", __FILE__)
-require 'theplatform'
+require './lib/theplatform.rb'
 
 Gem::Specification.new do |s|
   s.name             = 'tpdata'
