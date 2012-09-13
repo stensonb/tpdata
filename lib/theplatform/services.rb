@@ -7,7 +7,7 @@ module ThePlatform
   SERVICE =
     {
       :accessadmin  => { :endpoint => 'http://access.auth.theplatform.com/data/',
-                         :objects => [ :Permission, :Registry, :Role ] },
+                         :objects => [ :Account, :Permission, :Registry, :Role, :SuperUser ] },
       :enduser      => { :endpoint => 'http://enduser.access.auth.theplatform.com/data/',
                          :objects => [ :Permission, :Role ] },
       :account      => { :endpoint => 'https://mps.theplatform.com/data/',
