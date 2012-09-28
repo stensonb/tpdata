@@ -34,7 +34,7 @@ module ThePlatform
     # or
     #    ThePlatform::Data.mds.get('Category','all',schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd',account:'my_account')
     def get(object, id=[],options={})
-      self.class.base_uri @endpoint
+      set_uri
       set_id = "/#{id}" unless id =~ /all/i
       self.class.get("/#{object}#{set_id}", query: extras.merge(options))
     end
@@ -49,7 +49,7 @@ module ThePlatform
     #    ThePlatform::Data.mds.put('Media', the_body,
     #      schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def post(object, body, options={})
-      self.class.base_uri @endpoint
+      set_uri
       set_header options
       self.class.post("/#{object}", query: extras.merge(options), body: body)
     end
@@ -64,7 +64,7 @@ module ThePlatform
     #    ThePlatform::Data.mds.put('Media', the_body,
     #      schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def put(object, body, options={})
-      self.class.base_uri @endpoint
+      set_uri
       set_header options
       self.class.put("/#{object}", query: extras.merge(options), body: body)
     end
@@ -78,8 +78,20 @@ module ThePlatform
     #    ThePlatform::Data.mds.delete('Media','27550715', schema:'1.4.0',form:'cjson',
     #      token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
-      self.class.base_uri @endpoint
+      set_uri
       self.class.delete("/#{object}/#{id}", query: extras.merge(options))
+    end
+
+    # NOTIFY endpoint
+    #
+    # This moves to the /notify endpoint of the data service
+    #
+    # Needed parameters: token
+    #
+    #    ThePlatform::Data.mds.notify(token:'G1yP1Zsp7nEHW2fug6glIQCjfjIIIl', size:'10', since:'289334341')
+    def notify(options={})
+      self.class.base_uri @endpoint
+      self.class.get("/notify", query: options)
     end
 
     private
@@ -98,6 +110,11 @@ module ThePlatform
     def extras
       ThePlatform::Data.parameters
     end
+
+    def set_uri
+      self.class.base_uri "#{@endpoint}data/"
+    end
+
   end
 
 end
