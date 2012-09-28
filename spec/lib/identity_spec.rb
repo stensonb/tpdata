@@ -10,40 +10,49 @@ describe ThePlatform::Identity do
 
   end
 
-  describe "token" do
+  describe "#token" do
 
-    stub_request(:get, ThePlatform::Identity.token(schema:'1.0', form:'json', username:'test_user', password:'password')).
-  to_return(:status => 200, :body => "", :headers => {})
-
-    it 'should work' do
-      ThePlatform::Identity.token(schema:'1.0', form:'json', username:'test_user', password:'password')
+    it "should return a 200 response" do
+      ThePlatform::Identity.token(form:'json', schema:'1.0').code.should == 200
     end
 
-    it "should return all auth token params" do
-      res = @token
-      res.should be_a Hash
-      res.has_key?("signInResponse")
-      token = res["signInResponse"]["token"]
-      ThePlatform::Identity.invalidate!(token)
+    it 'should return BAD REQUEST if no schema or form present' do
+      ThePlatform::Identity.token(test:1, test:2).code.should == 422
+    end
+
+    it 'should have a valid return body' do
+      ThePlatform::Identity.token(form:'json', schema:'1.0')['description'].should == "No authentication header."
+    end
+
+    it 'should not authenticate an invalid user' do
+      ThePlatform::Identity.token(form:'json', schema:'1.0', username:'test', password:'pass')['description'].should == "Could not authenticate user test."
+    end
+  end
+
+  describe "#invalidate!" do
+
+    it 'should return a 200 response' do
+      ThePlatform::Identity.invalidate!('omg_i_haz_a_tokenz', form:'json', schema:'1.0').code.should == 200
+    end
+
+    it 'should have a valid return body' do
+      ThePlatform::Identity.invalidate!('omg_i_haz_a_tokenz', form:'json', schema:'1.0').should have_key 'signOutResponse'
     end
 
   end
 
-  describe "invalidate!" do
+  describe "#count" do
 
-    it "should invalidate a token" do
-      res = @session
-      token = res['signInResponse']['token']
-      ThePlatform::Identity.invalidate!(token).has_key?("signOutResponse")
+    it "should return a 200 response" do
+      ThePlatform::Identity.count(form:'json', schema:'1.0').code.should == 200
     end
 
-  end
+    it 'should return a BAD REQUEST if no schema or form are present' do
+      ThePlatform::Identity.count(test:1, test:2).code.should == 422
+    end
 
-  describe "count" do
-
-    it "should return the number of tokens" do
-      res = @session.count
-      res.should be_a Fixnum
+    it 'should fail if auth is invalid' do
+      ThePlatform::Identity.count(form:'json', schema:'1.0', username:'test', password:'pass')['description'].should == "Could not authenticate user test."
     end
 
   end
