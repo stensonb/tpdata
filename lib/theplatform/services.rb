@@ -7,13 +7,14 @@ module ThePlatform
   SERVICE =
     {
       :accessadmin  => { :endpoint => 'http://access.auth.theplatform.com/data/',
-                         :objects => [ :Account, :Permission, :Registry, :Role, :SuperUser ] },
+                         :objects => [ :Account, :Permission, :Registry, :Role ] },
       :enduser      => { :endpoint => 'http://enduser.access.auth.theplatform.com/data/',
                          :objects => [ :Permission, :Role ] },
       :account      => { :endpoint => 'https://mps.theplatform.com/data/',
                          :objects => [ :Account ] },
-      :console      => { :endpoint => 'http://data.mpx.theplatform.com/cds/',
-                         :objects => [ ]},
+      :console      => { :endpoint => 'http://data.mpx.theplatform.com/cds/data',
+                         :objects => [ :AccountSettings, :Command, :MenuItem, :Pane, :PaneState, :Panel,
+                                       :Shortcut, :UserAccountSettings, :UserSettings, :View, :ViewLink ] },
       :delivery     => { :endpoint => 'http://data.delivery.theplatform.com/delivery/data/',
                          :objects => [ :AccountSettings, :AdPolicy, :Restriction ] },
       :entitlements => { :endpoint => 'http://data.entitlement.theplatform.com/eds/data/',
