@@ -1,11 +1,10 @@
 # -*- ruby -*-
 
-require 'rubygems'
-require 'hoe'
+require 'rspec/core/rake_task'
 
-Hoe.spec 'tpdata' do
-
-  developer('Ben Woodall', 'mail@benwoodall.com')
-  dependency 'httparty', '~> 0.8.3'
-
+desc "Run specs"
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = './spec/*/*_spec.rb'
 end
+
+task default: :spec
