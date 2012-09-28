@@ -82,6 +82,13 @@ module ThePlatform
       self.class.delete("/#{object}/#{id}", query: extras.merge(options))
     end
 
+    # NOTIFY endpoint
+    #
+    # This moves to the /notify endpoint of the data service
+    #
+    # Needed parameters: token
+    #
+    #    ThePlatform::Data.mds.notify(token:'G1yP1Zsp7nEHW2fug6glIQCjfjIIIl', size:'10', since:'289334341')
     def notify(options={})
       self.class.base_uri @endpoint
       self.class.get("/notify", query: options)
