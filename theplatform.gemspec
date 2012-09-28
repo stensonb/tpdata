@@ -4,7 +4,7 @@ require './lib/theplatform.rb'
 Gem::Specification.new do |s|
   s.name             = 'tpdata'
   s.version          = ThePlatform::VERSION
-  s.date             = '2012-08-10'
+  s.date             = '2012-09-28'
   s.authors          = ['Ben Woodall']
   s.email            = 'ben.woodall@theplatform.com'
   s.homepage         = 'git://ln.benwoodall.com/tpdata.git'
