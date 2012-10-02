@@ -10,7 +10,7 @@ module ThePlatform
                          :objects => [ :Account, :Permission, :Registry, :Role ] },
       :enduser      => { :endpoint => 'http://enduser.access.auth.theplatform.com/',
                          :objects => [ :Permission, :Role ] },
-      :console      => { :endpoint => 'http://data.mpx.theplatform.com/cds/data',
+      :console      => { :endpoint => 'http://data.mpx.theplatform.com/cds/',
                          :objects => [ :AccountSettings, :Command, :MenuItem, :Pane, :PaneState, :Panel,
                                        :Shortcut, :UserAccountSettings, :UserSettings, :View, :ViewLink ] },
       :delivery     => { :endpoint => 'http://data.delivery.theplatform.com/delivery/',
