@@ -4,9 +4,9 @@ require './lib/theplatform.rb'
 Gem::Specification.new do |s|
   s.name             = 'tpdata'
   s.version          = ThePlatform::VERSION
-  s.date             = '2012-09-28'
+  s.date             = '2012-10-03'
   s.authors          = ['Ben Woodall']
-  s.email            = 'ben.woodall@theplatform.com'
+  s.email            = 'mail@benwoodall.com'
   s.homepage         = 'http://github.com/benwoody/tpdata'
 
   s.summary          = %q{RESTful wrapper for thePlatform}
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency 'httparty', "~> 0.8.3"
+  s.add_runtime_dependency 'httparty', "~> 0.9.0"
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'yard'
