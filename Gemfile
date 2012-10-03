@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'httparty'
+gem 'httparty',
 
 # Testing
 group :test do

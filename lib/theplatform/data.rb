@@ -4,6 +4,7 @@ module ThePlatform
   #    ThePlatform::Data#
   class Data
     include HTTParty
+    ssl_version :SSLv3
     extend ThePlatform::Configuration
 
     def initialize(params={})

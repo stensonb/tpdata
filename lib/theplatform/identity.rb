@@ -4,6 +4,7 @@ module ThePlatform
   #    ThePlatform::Identity#
   class Identity
     include HTTParty
+    ssl_version :SSLv3
     extend ThePlatform::Configuration
 
     class << self
