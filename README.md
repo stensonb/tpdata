@@ -1,5 +1,8 @@
 # tpdata
 
+[![Build Status](https://travis-ci.org/benwoody/tpdata.png)](https://travis-ci.org/benwoody/tpdata)
+
+
 ## DESCRIPTION:
 
 Tpdata gem is a wrapper for the RESTful interface for thePlatform for Media's Data Services.
@@ -99,7 +102,6 @@ Needed params here are the Object, Object ID(s), schema, form, token, and accoun
 
 ## LICENSE:
 
-Copyright (c) 2012 Ben Woodall
+MIT License (c) 2012 Ben Woodall
 
-Code hosted at git://ln.benwoodall.com/tpdata.git as ReadOnly.
-For Write access or send-email diffs: mail@benwoodall.com
+Fork it. Fix it. Push it. Pull it.
