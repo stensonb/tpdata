@@ -10,11 +10,15 @@ Tpdata gem is a wrapper for the RESTful interface for thePlatform for Media's Da
 
 ## REQUIREMENTS:
 
-The only Gem requirement is HTTParty
+HTTParty ~> 0.9.0
 
 ## INSTALL:
 
     gem install tpdata
+
+or
+
+    gem build theplatform.gemspec
 
 ## USAGE:
 
@@ -32,10 +36,12 @@ Both endpoints (::Data and ::Identity) support the #configure methods to build i
     end
     => {:schema=>"1.4.0", :form=>"cjson", :token=>"rDGZTYyxjGqjfEXNsphawfAqIdfdDDff"}
 
+If the #configurate method is used, it does not have to be added in the request.
+
 To list the available params to configure:
 
     ThePlatform::Identity.parameters
-    => {:schema=>"1.4.0", :form=>"cjson", :token=>"rDGZTYyxjGqjfEXNsphawfAqIdfdDDff"}
+    => {:schema=>nil, :form=>nil, :username=>nil, :password=>nil, :_duration=>nil, :_idleTimeout=>nil}
 
 The boolean methods #parameters? is also available to query if all params are set:
 
@@ -57,7 +63,7 @@ To request a token:
 Note that you can also set _duration and _idleTimeout as well.  Visit http://help.theplatform.com for more information.
 
 ### Data Services
-A list of endpoints and valid objects are available at http://help.theplatform.com.  Internally, they are listed in the services.rb file.
+A list of endpoints and valid objects are available at http://help.theplatform.com.  Internally, they are listed in the lib/theplatform/services.rb file.
 
 In this example, we're going to build a query for the Media Data Service (MDS):
 
@@ -97,8 +103,12 @@ A DELETE:
 
 Needed params here are the Object, Object ID(s), schema, form, token, and account.
 
-## ToDo:
-* Add SELF to the Identity endpoints
+Notify:
+
+The Notify endpoint is supported as well.
+
+    media.notify(token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk', size:'10', since:'11111111')
+
 
 ## LICENSE:
 
