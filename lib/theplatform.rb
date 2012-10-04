@@ -6,7 +6,7 @@ require 'httparty'
 module ThePlatform
 
   # Set gem version
-  VERSION = '1.0.0'
+  VERSION = '1.0.12'
 
   require 'theplatform/configuration'
   require 'theplatform/services'
