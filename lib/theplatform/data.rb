@@ -98,6 +98,7 @@ module ThePlatform
     private
 
     def set_header(option)
+      self.class.headers 'User-Agent' => "tpdata/#{VERSION}"
       if option[:form] =~ /(json|cjson)/i
         self.class.headers 'Content-Type' => 'application/json'
       elsif option[:form] == 'atom'
