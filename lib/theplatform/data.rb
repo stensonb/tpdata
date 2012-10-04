@@ -36,6 +36,7 @@ module ThePlatform
     #    ThePlatform::Data.mds.get('Category','all',schema:'1.4.0',form:'json',token:'12uZynnc2zHvVNDokvgG0mmK33yOOd',account:'my_account')
     def get(object, id=[],options={})
       set_uri
+      set_header options
       set_id = "/#{id}" unless id =~ /all/i
       self.class.get("/#{object}#{set_id}", query: extras.merge(options))
     end
