@@ -98,7 +98,7 @@ module ThePlatform
     private
 
     def set_header(option)
-      if option[:form] == 'json'
+      if option[:form] =~ /(json|cjson)/i
         self.class.headers 'Content-Type' => 'application/json'
       elsif option[:form] == 'atom'
         self.class.headers 'Content-Type' => 'application/atom+xml'
