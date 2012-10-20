@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name             = 'tpdata'
   s.version          = ThePlatform::VERSION
   s.date             = '2012-10-03'
-  s.authors          = ['Ben Woodall']
+  s.authors          = ['Ben Woodall, Bryan Stenson']
   s.email            = 'mail@benwoodall.com'
   s.homepage         = 'http://github.com/benwoody/tpdata'
 
@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'yard'
+  s.add_development_dependency 'webmock'
 end

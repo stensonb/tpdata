@@ -12,50 +12,144 @@ describe ThePlatform::Identity do
 
   describe "#token" do
 
-    it "should return a 200 response" do
-      ThePlatform::Identity.token(form:'json', schema:'1.0').code.should == 200
+    it "should return the token field of a 200 response" do
+
+      #setup a normal response
+      duration = ""
+      idleTimeout = ""
+      userName = "user"
+      password = "secret"
+      token = "abcdefghijklmnopqrstuvwxyz123456"
+
+      query = { "_duration" => duration,
+                "_idleTimeout" => idleTimeout,
+                "form" => "json",
+                "password" => password,
+                "schema" => "1.0", 
+                "username" => userName }
+
+      # stub the valid credential login
+      h = Hash.new
+      h["signInResponse"] = {"duration" => duration, 
+                             "idleTimeout" => idleTimeout, 
+                             "token" => "abcdefghijklmnopqrstuvwxyz123456",
+                             "userId" => "https://someUserURI",
+                             "userName" => userName }
+
+      stub_request(:get, ThePlatform::IDENTITY + 'signIn').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
+
+      JSON.parse(ThePlatform::Identity.token(username:userName, password:password, form:query['form'], schema:query['schema']).body)["signInResponse"]["token"].should == token
+      
     end
 
-    it 'should return BAD REQUEST if no schema or form present' do
-      ThePlatform::Identity.token(test:1, test:2).code.should == 422
+    it 'should not contain a token field given invalid credentials' do
+
+      #setup an invalid credential request
+      duration = ""
+      idleTimeout = ""
+      userName = "user"
+      password = "badsecret"
+
+      query = { "_duration" => duration,
+                "_idleTimeout" => idleTimeout,
+                "form" => "json",
+                "password" => password,
+                "schema" => "1.0", 
+                "username" => userName }
+
+      # stub the invalid credential response
+      h = Hash.new
+      h["responseCode"] = 401
+      h["description"] = "Could not authenticate user " + userName + "."
+      h["title"] = "com.theplatform.authentication.api.exception.AuthentcationException",
+      h["correlationId"] = "somerandomUUID"
+      h["isException"] = "true"
+
+      stub_request(:get, ThePlatform::IDENTITY + 'signIn').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
+
+      JSON.parse(ThePlatform::Identity.token(username:userName, password:password, form:query['form'], schema:query['schema']).body).key?("token").should == false
+
     end
 
-    it 'should have a valid return body' do
-      ThePlatform::Identity.token(form:'json', schema:'1.0')['description'].should == "No authentication header."
+    pending 'should do something when the connection is reset' do
+       #TODO: define this
     end
 
-    it 'should not authenticate an invalid user' do
-      ThePlatform::Identity.token(form:'json', schema:'1.0', username:'test', password:'pass')['description'].should == "Could not authenticate user test."
-    end
   end
 
   describe "#invalidate!" do
 
-    it 'should return a 200 response' do
-      ThePlatform::Identity.invalidate!('omg_i_haz_a_tokenz', form:'json', schema:'1.0').code.should == 200
+    # tP identity always returns a 200 and empty signOutResponse hash, even if the token was invalid
+    # must be a security thing :)
+    it 'should return a hash with an empty signOutResponse' do
+      stub_request(:get, ThePlatform::IDENTITY + 'signOut').with(:query => hash_including("form" => 'json', "schema" => '1.0')).to_return(:status => 200, :body => '{ "signOutResponse": {}}', :headers => {})
+
+      JSON.parse(ThePlatform::Identity.invalidate!('blah1234', form:'json', schema:'1.0').body)["signOutResponse"].should == {}
     end
 
-    it 'should have a valid return body' do
-      ThePlatform::Identity.invalidate!('omg_i_haz_a_tokenz', form:'json', schema:'1.0').should have_key 'signOutResponse'
+    pending 'should do something when the connection is reset' do
+      #TODO: define this
     end
 
   end
 
   describe "#count" do
 
-    it "should return a 200 response" do
-      ThePlatform::Identity.count(form:'json', schema:'1.0').code.should == 200
+    it 'should return a token count for valid user' do
+
+      #setup a normal response
+      duration = ""
+      idleTimeout = ""
+      userName = "user"
+      password = "secret"
+      token = "abcdefghijklmnopqrstuvwxyz123456"
+      token_count = 2
+
+      query = { "_duration" => duration,
+                "_idleTimeout" => idleTimeout,
+                "form" => "json",
+                "password" => password,
+                "schema" => "1.0", 
+                "username" => userName }
+
+      # stub the valid credential login
+      h = { "getTokenCountResponse" => token_count }
+
+      stub_request(:get, ThePlatform::IDENTITY + 'getTokenCount').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
+
+      JSON.parse(ThePlatform::Identity.count(username:userName, password:password, form:query['form'], schema:query['schema']).body)["getTokenCountResponse"] == token_count
+
     end
 
-    it 'should return a BAD REQUEST if no schema or form are present' do
-      ThePlatform::Identity.count(test:1, test:2).code.should == 422
+    it 'should not contain a token count for invalid user' do
+      #setup an invalid response
+      duration = ""
+      idleTimeout = ""
+      userName = "user"
+      password = "secret"
+
+      query = { "_duration" => duration,
+                "_idleTimeout" => idleTimeout,
+                "form" => "json",
+                "password" => password,
+                "schema" => "1.0", 
+                "username" => userName }
+
+      # stub the invalid credential login
+      h = { "responseCode"=>401, 
+            "description"=>"Could not authenticate user " + userName + ".",
+            "title"=>"com.theplatform.authentication.api.exception.AuthenticationException", 
+            "correlationId"=>"someUUIDhere", 
+            "isException"=>true}
+
+      stub_request(:get, ThePlatform::IDENTITY + 'getTokenCount').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
+
+      JSON.parse(ThePlatform::Identity.count(username:userName, password:password, form:query['form'], schema:query['schema']).body).key?("getTokenCountResponse").should == false
     end
 
-    it 'should fail if auth is invalid' do
-      ThePlatform::Identity.count(form:'json', schema:'1.0', username:'test', password:'pass')['description'].should == "Could not authenticate user test."
+    pending 'should do something when the connection is reset' do
+      #TODO: define this
     end
 
   end
-
 end
-
