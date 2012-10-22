@@ -27,8 +27,6 @@ describe ThePlatform::Identity do
         @idleTimeout = ""
         @userName = "user"
         @password = "secret"
-        @token = "abcdefghijklmnopqrstuvwxyz123456"
-        @userId = "https://someUserURI"
         @form = "json"
         @schema = "1.0"
 
@@ -41,15 +39,7 @@ describe ThePlatform::Identity do
                   "schema" => @schema,
                   "username" => @userName }
 
-        # stub the valid credential login
-        @response_body = Hash.new
-        @response_body["signInResponse"] = {"duration" => @duration, 
-                                            "idleTimeout" => @idleTimeout, 
-                                            "token" => @token,
-                                            "userId" => @userId,
-                                            "userName" => @userName }
-
-        stub_request(:get, @signInURL).with(:query => @query).to_return(:status => 200, :body => @response_body.to_json, :headers => {})
+        stub_request(:get, @signInURL).with(:query => @query).to_return(:status => 200, :body => {}, :headers => {})
       end
 
     it "should call signIn endpoint with parameters" do
