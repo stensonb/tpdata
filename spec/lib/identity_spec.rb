@@ -2,6 +2,11 @@ require 'spec_helper'
 
 describe ThePlatform::Identity do
 
+  # clear webmock stubs before each test
+  before(:each) do
+    WebMock.reset!
+  end
+
   describe 'default attributes' do
 
     it 'should include HTTParty methods' do
@@ -12,83 +17,92 @@ describe ThePlatform::Identity do
 
   describe "#token" do
 
-    it "should return the token field of a 200 response" do
+      # stub "valid credentials" identity call
+      before(:each) do
+        # reset anything from previous tests
+        WebMock.reset!
 
-      #setup a normal response
-      duration = ""
-      idleTimeout = ""
-      userName = "user"
-      password = "secret"
-      token = "abcdefghijklmnopqrstuvwxyz123456"
+        #setup a normal response
+        @duration = ""
+        @idleTimeout = ""
+        @userName = "user"
+        @password = "secret"
+        @token = "abcdefghijklmnopqrstuvwxyz123456"
+        @userId = "https://someUserURI"
+        @form = "json"
+        @schema = "1.0"
 
-      query = { "_duration" => duration,
-                "_idleTimeout" => idleTimeout,
-                "form" => "json",
-                "password" => password,
-                "schema" => "1.0", 
-                "username" => userName }
+        @signInURL = ThePlatform::IDENTITY + 'signIn'
 
-      # stub the valid credential login
-      h = Hash.new
-      h["signInResponse"] = {"duration" => duration, 
-                             "idleTimeout" => idleTimeout, 
-                             "token" => "abcdefghijklmnopqrstuvwxyz123456",
-                             "userId" => "https://someUserURI",
-                             "userName" => userName }
+        @query = { "_duration" => @duration,
+                  "_idleTimeout" => @idleTimeout,
+                  "form" => @form,
+                  "password" => @password,
+                  "schema" => @schema,
+                  "username" => @userName }
 
-      stub_request(:get, ThePlatform::IDENTITY + 'signIn').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
+        # stub the valid credential login
+        @response_body = Hash.new
+        @response_body["signInResponse"] = {"duration" => @duration, 
+                                            "idleTimeout" => @idleTimeout, 
+                                            "token" => @token,
+                                            "userId" => @userId,
+                                            "userName" => @userName }
 
-      JSON.parse(ThePlatform::Identity.token(username:userName, password:password, form:query['form'], schema:query['schema']).body)["signInResponse"]["token"].should == token
-      
+        stub_request(:get, @signInURL).with(:query => @query).to_return(:status => 200, :body => @response_body.to_json, :headers => {})
+      end
+
+    it "should call signIn endpoint with parameters" do
+      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema)
+      WebMock.should have_requested(:get, @signInURL)
+             .with(:query => hash_including({"username" => @userName, 
+                                             "password" => @password,
+                                             "form" => @form,
+                                             "schema" => @schema}))
     end
 
-    it 'should not contain a token field given invalid credentials' do
-
-      #setup an invalid credential request
-      duration = ""
-      idleTimeout = ""
-      userName = "user"
-      password = "badsecret"
-
-      query = { "_duration" => duration,
-                "_idleTimeout" => idleTimeout,
-                "form" => "json",
-                "password" => password,
-                "schema" => "1.0", 
-                "username" => userName }
-
-      # stub the invalid credential response
-      h = Hash.new
-      h["responseCode"] = 401
-      h["description"] = "Could not authenticate user " + userName + "."
-      h["title"] = "com.theplatform.authentication.api.exception.AuthentcationException",
-      h["correlationId"] = "somerandomUUID"
-      h["isException"] = "true"
-
-      stub_request(:get, ThePlatform::IDENTITY + 'signIn').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
-
-      JSON.parse(ThePlatform::Identity.token(username:userName, password:password, form:query['form'], schema:query['schema']).body).key?("token").should == false
-
+    it "should return a HTTParty::Response from the web request" do
+      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema).class.should == HTTParty::Response
     end
 
-    pending 'should do something when the connection is reset' do
-       #TODO: define this
+    it "should bubble up any exception" do
+      stub_request(:any, @signInURL)
+                  .with(:query => hash_including({}))
+                  .to_raise(Exception)
+
+      expect {ThePlatform::Identity.token(username: @userName, password: @password, from: @form, schema: @schema)}.to raise_error(Exception)
     end
 
   end
 
   describe "#invalidate!" do
-
-    # tP identity always returns a 200 and empty signOutResponse hash, even if the token was invalid
-    # must be a security thing :)
-    it 'should return a hash with an empty signOutResponse' do
-      stub_request(:get, ThePlatform::IDENTITY + 'signOut').with(:query => hash_including("form" => 'json', "schema" => '1.0')).to_return(:status => 200, :body => '{ "signOutResponse": {}}', :headers => {})
-
-      JSON.parse(ThePlatform::Identity.invalidate!('blah1234', form:'json', schema:'1.0').body)["signOutResponse"].should == {}
+    before(:all) do
+      @signOutURL = ThePlatform::IDENTITY + 'signOut'
     end
 
-    pending 'should do something when the connection is reset' do
-      #TODO: define this
+    before(:each) do
+      WebMock.reset!
+    end
+
+    it "should call signOut endpoint with parameters" do
+      @token = 'foo'
+
+      stub_request(:any, @signOutURL)
+                  .with(:query => hash_including({}))
+                  .to_return(:status => 200, :body => {}, :headers => {})
+
+      ThePlatform::Identity.invalidate!(@token)
+
+      WebMock.should have_requested(:get, @signOutURL)
+             .with(:query => hash_including({"_token" => @token}))
+    end
+
+    it "should bubble up any exception" do
+      stub_request(:any, @signOutURL)
+                  .with(:query => hash_including({}))
+                  .to_raise(Exception)
+
+      expect {ThePlatform::Identity.invalidate!(@token)}.to raise_error(Exception)
     end
 
   end
