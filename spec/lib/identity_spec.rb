@@ -82,19 +82,23 @@ describe ThePlatform::Identity do
 
     before(:each) do
       WebMock.reset!
+
+      stub_request(:any, @signOutURL)
+                  .with(:query => hash_including({}))
+                  .to_return(:status => 200, :body => {}, :headers => {})
     end
 
     it "should call signOut endpoint with parameters" do
       @token = 'foo'
 
-      stub_request(:any, @signOutURL)
-                  .with(:query => hash_including({}))
-                  .to_return(:status => 200, :body => {}, :headers => {})
-
       ThePlatform::Identity.invalidate!(@token)
 
       WebMock.should have_requested(:get, @signOutURL)
              .with(:query => hash_including({"_token" => @token}))
+    end
+
+    it "should return a HTTParty::Response from the web request" do
+      ThePlatform::Identity.invalidate!(@token).class.should == HTTParty::Response
     end
 
     it "should bubble up any exception" do
@@ -108,62 +112,37 @@ describe ThePlatform::Identity do
   end
 
   describe "#count" do
-
-    it 'should return a token count for valid user' do
-
-      #setup a normal response
-      duration = ""
-      idleTimeout = ""
-      userName = "user"
-      password = "secret"
-      token = "abcdefghijklmnopqrstuvwxyz123456"
-      token_count = 2
-
-      query = { "_duration" => duration,
-                "_idleTimeout" => idleTimeout,
-                "form" => "json",
-                "password" => password,
-                "schema" => "1.0", 
-                "username" => userName }
-
-      # stub the valid credential login
-      h = { "getTokenCountResponse" => token_count }
-
-      stub_request(:get, ThePlatform::IDENTITY + 'getTokenCount').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
-
-      JSON.parse(ThePlatform::Identity.count(username:userName, password:password, form:query['form'], schema:query['schema']).body)["getTokenCountResponse"] == token_count
-
+    before(:all) do
+      @getTokenCountURL = ThePlatform::IDENTITY + 'getTokenCount'
     end
 
-    it 'should not contain a token count for invalid user' do
-      #setup an invalid response
-      duration = ""
-      idleTimeout = ""
-      userName = "user"
-      password = "secret"
+    before(:each) do
+      WebMock.reset!
 
-      query = { "_duration" => duration,
-                "_idleTimeout" => idleTimeout,
-                "form" => "json",
-                "password" => password,
-                "schema" => "1.0", 
-                "username" => userName }
-
-      # stub the invalid credential login
-      h = { "responseCode"=>401, 
-            "description"=>"Could not authenticate user " + userName + ".",
-            "title"=>"com.theplatform.authentication.api.exception.AuthenticationException", 
-            "correlationId"=>"someUUIDhere", 
-            "isException"=>true}
-
-      stub_request(:get, ThePlatform::IDENTITY + 'getTokenCount').with(:query => query).to_return(:status => 200, :body => h.to_json, :headers => {})
-
-      JSON.parse(ThePlatform::Identity.count(username:userName, password:password, form:query['form'], schema:query['schema']).body).key?("getTokenCountResponse").should == false
+      stub_request(:any, @getTokenCountURL)
+                  .with(:query => hash_including({}))
+                  .to_return(:status => 200, :body => {}, :headers => {})
     end
 
-    pending 'should do something when the connection is reset' do
-      #TODO: define this
+    it "should call getTokenCount endpoint with parameters" do
+      ThePlatform::Identity.count(foo: 'bar')
+
+      WebMock.should have_requested(:get, @getTokenCountURL)
+             .with(:query => hash_including({"foo" => 'bar'}))
+    end
+
+    it "should return a HTTParty::Response from the web request" do
+      ThePlatform::Identity.count({}).class.should == HTTParty::Response
+    end
+
+    it "should bubble up any exception" do
+      stub_request(:any, @getTokenCountURL)
+                  .with(:query => hash_including({}))
+                  .to_raise(Exception)
+
+      expect {ThePlatform::Identity.invalidate!(@token)}.to raise_error(Exception)
     end
 
   end
+
 end
