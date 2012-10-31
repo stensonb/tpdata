@@ -1,9 +1,9 @@
 $:.push File.expand_path("../lib", __FILE__)
-require './lib/theplatform.rb'
+version = File.read(File.expand_path("../tpdata_version",__FILE__)).strip
 
 Gem::Specification.new do |s|
   s.name             = 'tpdata'
-  s.version          = ThePlatform::VERSION
+  s.version          = version
   s.date             = '2012-10-03'
   s.authors          = ['Ben Woodall, Bryan Stenson']
   s.email            = 'mail@benwoodall.com'
