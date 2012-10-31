@@ -27,40 +27,101 @@ describe ThePlatform::Data do
   end
 
   describe 'requests' do
+    before(:each) do
+      WebMock.reset!
+    end
 
-    it 'should return 200' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).get('', 'all', schema:'1.0', form:'json').code.should == 200
+    it 'should return a HTTParty::Response object' do
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/")
+                    .with(:query => hash_including({}))
+                    .to_return(:status => 200, :body => "", :headers => {})
+        ThePlatform::Data.send(service).get('','all',{}).class == HTTParty::Response
       end
     end
 
     it 'should make a GET against an endpoint' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).get('Object', 'all').request.instance_variable_get(:@http_method).should equal Net::HTTP::Get
+      object = "Object"
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).get(object, 'all')
+
+        WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+               .with(:query => hash_including({}))
       end
     end
 
     it 'should make a POST against an endpoint' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).post('Object', '{BODY}').request.instance_variable_get(:@http_method).should equal Net::HTTP::Post
+      object = "Object"
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:post, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).post(object, 'all')
+
+        WebMock.should have_requested(:post, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+               .with(:query => hash_including({}))
       end
     end
 
     it 'should make a PUT against an endpoint' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).put('Object', '{BODY}').request.instance_variable_get(:@http_method).should equal Net::HTTP::Put
+      object = "Object"
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:put, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).put(object, 'all')
+
+        WebMock.should have_requested(:put, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+               .with(:query => hash_including({}))
       end
     end
 
     it 'should make a DELETE against an endpoint' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).delete('Object', 'IDS').request.instance_variable_get(:@http_method).should equal Net::HTTP::Delete
+      object = "Object"
+      objectId = '123'
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:delete, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object + "/" + objectId)
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).delete(object, objectId)
+
+        WebMock.should have_requested(:delete, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object + "/" + objectId)
+               .with(:query => hash_including({}))
       end
     end
 
-    it 'should be able to use the NOTIFY method' do
-      ThePlatform.const_get(:SERVICE).keys.each do |endpoint|
-        ThePlatform::Data.send(endpoint).notify('options').request.instance_variable_get(:@http_method).should equal Net::HTTP::Get
+    it 'should perform GET method on the NOTIFY endpoint' do
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "notify")
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).notify(token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk', size:'10', since:'11111111')
+
+        WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'notify')
+               .with(:query => hash_including({}))
+      end
+    end
+
+    it 'should bubble up any exception' do
+      object = "Object"
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                    .with(:query => hash_including({}))
+                    .to_raise(Exception)
+
+        expect{ThePlatform::Data.send(service).get(object, 'all')}.to raise_error(Exception)
+
+        WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+               .with(:query => hash_including({}))
       end
     end
 
