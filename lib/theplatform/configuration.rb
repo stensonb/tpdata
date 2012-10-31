@@ -24,7 +24,7 @@ module ThePlatform
     # List available parameters and values in those params
     def parameters
       @values = {}
-      keys.each { |k| @values.merge! k => get_var("@#{k}") }
+      keys.each { |k| @values.merge! k => get_var("@#{k}") unless k[1] == nil }
       @values
     end
 
