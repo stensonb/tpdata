@@ -32,27 +32,27 @@ describe ThePlatform::Identity do
 
         @signInURL = ThePlatform::IDENTITY + 'signIn'
 
-        @query = { "_duration" => @duration,
-                  "_idleTimeout" => @idleTimeout,
-                  "form" => @form,
+        @query = { "form" => @form,
                   "password" => @password,
                   "schema" => @schema,
-                  "username" => @userName }
+                  "username" => @userName,
+                  "_duration" => @duration }
 
         stub_request(:get, @signInURL).with(:query => @query).to_return(:status => 200, :body => {}, :headers => {})
       end
 
     it "should call signIn endpoint with parameters" do
-      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema)
+      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema, _duration: @duration)
       WebMock.should have_requested(:get, @signInURL)
-             .with(:query => hash_including({"username" => @userName, 
+             .with(:query => hash_including({"username" => @userName,
                                              "password" => @password,
                                              "form" => @form,
-                                             "schema" => @schema}))
+                                             "schema" => @schema,
+                                             "_duration" => @duration}))
     end
 
     it "should return a HTTParty::Response from the web request" do
-      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema).class.should == HTTParty::Response
+      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema, _duration: @duration).class.should == HTTParty::Response
     end
 
     it "should bubble up any exception" do
