@@ -25,7 +25,7 @@ describe ThePlatform::Configuration do
     it 'should return false if all values are not set' do
       ThePlatform::Data.schema = nil
       ThePlatform::Data.parameters[:schema].should == nil
-      ThePlatform::Data.parameters?.should be false
+      ThePlatform::Data.parameters?.should eq false
     end
 
   end

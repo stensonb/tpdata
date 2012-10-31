@@ -24,20 +24,20 @@ module ThePlatform
     # List available parameters and values in those params
     def parameters
       @values = {}
-      keys.each { |k| @values.merge! k => get_var("@#{k}") unless k[1] == nil }
+      keys.each { |k| @values.merge! k => get_var(k) unless get_var(k) == nil }
       @values
     end
 
     # Returns true or false if all parameters are set.
     def parameters?
-      parameters.values.all?
+      parameters.keys == keys
     end
 
     private
 
     # Helper to clean up recursive method in #parameters
     def get_var(var)
-      self.instance_variable_get(var)
+      self.instance_variable_get("@#{var}")
     end
 
   end
