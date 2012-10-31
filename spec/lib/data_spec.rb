@@ -27,9 +27,6 @@ describe ThePlatform::Data do
   end
 
   describe 'requests' do
-    before(:each) do
-      WebMock.reset!
-    end
 
     it 'should return a HTTParty::Response object' do
       ThePlatform.const_get(:SERVICE).keys.each do |service|
