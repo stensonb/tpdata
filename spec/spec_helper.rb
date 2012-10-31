@@ -3,6 +3,10 @@ require 'rspec'
 require 'webmock/rspec'
 require 'json'
 
+RSpec.configure do |config|
+  config.order = 'random'
+end
+
 if ENV["COVERAGE"] == 'true'
   require 'simplecov'
 
