@@ -1,4 +1,3 @@
-$:.push File.expand_path("../lib", __FILE__)
 version = File.read(File.expand_path("../tpdata_version",__FILE__)).strip
 
 Gem::Specification.new do |s|
@@ -25,5 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'simplecov-rcov'
-  
+
 end
