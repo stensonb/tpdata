@@ -130,7 +130,7 @@ describe ThePlatform::Identity do
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
 
-      expect {ThePlatform::Identity.invalidate!(@token)}.to raise_error(Exception)
+      expect {ThePlatform::Identity.count(foo:'bar')}.to raise_error(Exception)
     end
 
   end
