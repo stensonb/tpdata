@@ -1,2 +1,31 @@
-coverage
+# OS-specific
+.DS_Store
+
+# Bundler/Rubygems
+.bundle
+pkg/*
+tags
 Gemfile.lock
+test/tmp/
+
+# Versioning
+.rbenv-version
+.rvmrc
+
+# Documentation
+_site/*
+.yardoc/
+doc/
+
+# Python
+*.pyc
+
+# Rubinius
+*.rbc
+
+# IDE junk
+.idea/*
+*.iml
+
+# Testing
+coverage
