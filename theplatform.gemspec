@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.extra_rdoc_files = ["README.md"]
 
-  s.add_runtime_dependency 'httparty', "~> 0.9.0"
+  s.add_dependency 'httparty', "~> 0.9.0"
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'yard'
