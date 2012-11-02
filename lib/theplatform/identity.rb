@@ -16,7 +16,7 @@ module ThePlatform
 
       # Return ALL THE TOKEN!
       #
-      # ThePlatform::Identity.token(username:'USERNAME', password:'PASSWORD', schema:'1.0', form:'(json|xml|rss)')
+      # ThePlatform::Identity.token(username:'USERNAME', password:'PASSWORD', schema:'1.0', form:'(json|xml)')
       #
       # _duration: and _idleTimeout: are optional.  Resorts to thePlatform defaults if not defined
       def token(options = {})
@@ -26,7 +26,7 @@ module ThePlatform
 
       # Invalidate a given Token
       #
-      # ThePlatform::Identity.invalidate!(token, schema:'1.0', form:'(json|xml|rss)')
+      # ThePlatform::Identity.invalidate!(token, schema:'1.0', form:'(json|xml)')
       def invalidate!(tokens, options = {})
         base_uri IDENTITY
         get("/signOut?_token=#{tokens}", query: extras.merge(options))
@@ -34,7 +34,7 @@ module ThePlatform
 
       # Return the number of tokens in an account.
       #
-      # ThePlatform::Identity.count(username:'USERNAME', password:'PASSWORD',schema:'1.0', form:'(json|xml|rss)')
+      # ThePlatform::Identity.count(username:'USERNAME', password:'PASSWORD',schema:'1.0', form:'(json|xml)')
       def count(options = {})
         base_uri IDENTITY
         get("/getTokenCount", query: extras.merge(options))
