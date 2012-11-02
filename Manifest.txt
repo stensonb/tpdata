@@ -1,3 +1,4 @@
+.gitignore
 Gemfile
 Manifest.txt
 README.md
@@ -13,3 +14,4 @@ spec/lib/data_spec.rb
 spec/lib/identity_spec.rb
 spec/spec_helper.rb
 theplatform.gemspec
+tpdata_version
