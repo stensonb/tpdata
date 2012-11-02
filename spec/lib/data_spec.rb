@@ -148,7 +148,7 @@ describe ThePlatform::Data do
 
         content_type.each do |format|
           stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
-                      .with(:query => {form:format[0]})
+                      .with(:query => hash_including({}))
 
           ThePlatform::Data.send(service).get(object, 'all',form:format[0])
 
