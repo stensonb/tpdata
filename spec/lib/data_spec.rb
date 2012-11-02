@@ -122,6 +122,42 @@ describe ThePlatform::Data do
       end
     end
 
+    it 'should show the gem name/version number as the User-Agent' do
+      object = "Object"
+      version = File.read(File.expand_path("../../../tpdata_version",__FILE__)).strip
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                    .with(:query => hash_including({}))
+
+        ThePlatform::Data.send(service).get(object, 'all')
+
+        WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+               .with(:query => hash_including({}), :headers => {"User-Agent" => "tpdata/#{version}"})
+      end
+    end
+
+    it 'should make the correct Content-Type request' do
+      object = "Object"
+      ThePlatform.const_get(:SERVICE).keys.each do |service|
+        WebMock.reset!
+        content_type = {'atom' => 'application/atom+xml',
+                        'rss'  => 'application/rss+xml',
+                        'json' => 'application/json',
+                        'cjson' => 'application/json'}
+
+        content_type.each do |format|
+          stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
+                      .with(:query => {form:format[0]})
+
+          ThePlatform::Data.send(service).get(object, 'all',form:format[0])
+
+          WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
+                 .with(:query => hash_including({form:format[0]}), :headers => {"Content-Type" => format[1]})
+        end
+      end
+    end
+
   end
 
 end
