@@ -8,17 +8,12 @@ end
 
 if ENV["COVERAGE"] == 'true'
   require 'simplecov'
-
-  # add legacy rcov output (so Jenkins/Sonor play well)
   require 'simplecov-rcov'
-  class SimpleCov::Formatter::MergedFormatter
-    def format(result)
-       SimpleCov::Formatter::HTMLFormatter.new.format(result)
-       SimpleCov::Formatter::RcovFormatter.new.format(result)
-    end
-  end
-  SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
 
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::RcovFormatter
+  ]
   SimpleCov.start
 end
 
