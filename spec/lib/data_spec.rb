@@ -13,7 +13,7 @@ describe ThePlatform::Data do
   describe 'services' do
 
     it 'should return available services to call' do
-      ThePlatform::Data.services.should include ThePlatform.const_get(:SERVICE).keys.each { |s| puts s.to_s }
+      ThePlatform::Data.services.should == ThePlatform.const_get(:SERVICE).keys
     end
 
   end
