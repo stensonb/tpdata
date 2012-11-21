@@ -10,6 +10,14 @@ describe ThePlatform::Data do
 
   end
 
+  describe 'services' do
+
+    it 'should return available services to call' do
+      ThePlatform::Data.services.should include ThePlatform.const_get(:SERVICE).keys.each { |s| puts s.to_s }
+    end
+
+  end
+
   describe 'endpoints' do
 
     it 'should make for new class methods' do
