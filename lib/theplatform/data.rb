@@ -12,6 +12,13 @@ module ThePlatform
       @objects  = params[:objects]
     end
 
+    # List the available services to build objects with
+    def self.services
+      service = []
+      ThePlatform.const_get(:SERVICE).keys.each { |k| service << k }
+      service
+    end
+
     # Set the different available params to configure
     def self.keys
       @keys ||= [:schema, :form, :token]

@@ -10,6 +10,14 @@ describe ThePlatform::Data do
 
   end
 
+  describe 'services' do
+
+    it 'should return available services to call' do
+      ThePlatform::Data.services.should == ThePlatform.const_get(:SERVICE).keys
+    end
+
+  end
+
   describe 'endpoints' do
 
     it 'should make for new class methods' do
