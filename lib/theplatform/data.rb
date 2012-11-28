@@ -25,9 +25,9 @@ module ThePlatform
     end
 
     # MetaMagic to initialize SERVICE hash into methods to create SERVICE objects
-    (class << self; self; end).instance_eval do
+    class_eval do
       SERVICE.keys.each do |data|
-        define_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
+        define_singleton_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
       end
     end
 
