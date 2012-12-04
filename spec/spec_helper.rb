@@ -1,12 +1,12 @@
 require 'rubygems'
 require 'rspec'
-require 'webmock/rspec'
 
 RSpec.configure do |config|
   config.order = 'random'
 end
 
 if ENV["COVERAGE"] == 'true'
+  require 'webmock/rspec'
   require 'simplecov'
   require 'simplecov-rcov'
 
