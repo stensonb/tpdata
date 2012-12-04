@@ -101,13 +101,13 @@ A DELETE:
 
     media.delete('Media','27550715', schema:'1.4.0',form:'cjson',token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'My_Account')
 
-Needed params here are the Object, Object ID(s), schema, form, token, and account.
+Needed params here are the Object, Object ID(s), schema, form, token, and account.  To specify no ID, pass 'none' as the parameter.
 
 Notify:
 
 The Notify endpoint is supported as well.
 
-    media.notify(token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk', size:'10', since:'11111111')
+    media.notify(size:'10', since:'11111111')
 
 
 ## LICENSE:
