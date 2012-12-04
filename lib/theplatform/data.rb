@@ -81,7 +81,9 @@ module ThePlatform
     #      token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk',account:'Ruby Test Account')
     def delete(object,id=[],options={})
       set_uri
-      self.class.delete("/#{object}/#{id}", query: extras.merge(options))
+      set_header options
+      set_id = "/#{id}" unless id =~ /none/i
+      self.class.delete("/#{object}#{set_id}", query: extras.merge(options))
     end
 
     # NOTIFY endpoint
@@ -92,8 +94,9 @@ module ThePlatform
     #
     #    ThePlatform::Data.mds.notify(token:'G1yP1Zsp7nEHW2fug6glIQCjfjIIIl', size:'10', since:'289334341')
     def notify(options={})
+      set_header
       self.class.base_uri @endpoint
-      self.class.get("/notify", query: options)
+      self.class.get("/notify", query: extras.merge(options))
     end
 
     private
