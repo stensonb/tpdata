@@ -4,10 +4,10 @@ gemspec
 
 gem 'rake'
 gem 'rspec'
+gem 'webmock'
+gem 'yard'
 
 group :coverage do
-  gem 'yard'
-  gem 'webmock'
   gem 'simplecov'
   gem 'simplecov-rcov'
 end
