@@ -12,15 +12,22 @@ module ThePlatform
       @objects  = params[:objects]
     end
 
+    # List the available services to build objects with
+    def self.services
+      service = []
+      ThePlatform.const_get(:SERVICE).keys.each { |k| service << k }
+      service
+    end
+
     # Set the different available params to configure
     def self.keys
       @keys ||= [:schema, :form, :token]
     end
 
     # MetaMagic to initialize SERVICE hash into methods to create SERVICE objects
-    (class << self; self; end).instance_eval do
+    class_eval do
       SERVICE.keys.each do |data|
-        define_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
+        define_singleton_method(data) { self.new(endpoint: SERVICE[data][:endpoint], objects: SERVICE[data][:objects]) }
       end
     end
 
