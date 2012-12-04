@@ -3,9 +3,9 @@ source :rubygems
 gemspec
 
 gem 'rake'
+gem 'rspec'
 
 group :coverage do
-  gem 'rspec'
   gem 'yard'
   gem 'webmock'
   gem 'simplecov'
