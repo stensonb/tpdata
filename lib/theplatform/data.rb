@@ -80,7 +80,8 @@ module ThePlatform
 
     # DELETE objects
     #
-    # To DELETE Objects, pass the Object type and comma separated IDs
+    # To DELETE Objects, pass the Object type and comma separated IDs, or specify 'none' for ID if DELETE'ing
+    # via query.
     #
     # Needed parameters: schema, form, token, and account
     #
@@ -101,7 +102,7 @@ module ThePlatform
     #
     #    ThePlatform::Data.mds.notify(token:'G1yP1Zsp7nEHW2fug6glIQCjfjIIIl', size:'10', since:'289334341')
     def notify(options={})
-      set_header
+      set_header options
       self.class.base_uri @endpoint
       self.class.get("/notify", query: extras.merge(options))
     end
