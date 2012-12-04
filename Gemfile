@@ -2,8 +2,9 @@ RUBY_ENGINE = 'ruby' unless defined? RUBY_ENGINE
 source :rubygems
 gemspec
 
+gem 'rake'
+
 group :coverage do
-  gem 'rake'
   gem 'rspec'
   gem 'yard'
   gem 'webmock'
