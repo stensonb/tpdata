@@ -16,12 +16,20 @@ module ThePlatform
 
       # Return ALL THE TOKEN!
       #
-      # ThePlatform::Identity.token(username:'USERNAME', password:'PASSWORD', schema:'1.0', form:'(json|xml)')
+      # This returns the entire response body from the Token request.
+      #
+      # ThePlatform::Identity.signin_response(username:'USERNAME', password:'PASSWORD', schema:'1.0', form:'(json|xml)')
       #
       # _duration: and _idleTimeout: are optional.  Resorts to thePlatform defaults if not defined
-      def token(options = {})
+      def signin_response(options={})
         base_uri IDENTITY
-        get("/signIn", query: extras.merge(options))
+        get("/signIn", query: extras.merge(options)).fetch('signInResponse') { "Could not authenticate user." }
+      end
+
+      # Return only the Token as a String
+      def token(options={})
+        token = signin_response(options)
+        token.fetch('token') { "Could not authenticate user." }
       end
 
       # Invalidate a given Token
