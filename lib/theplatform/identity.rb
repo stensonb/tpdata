@@ -23,13 +23,20 @@ module ThePlatform
       # _duration: and _idleTimeout: are optional.  Resorts to thePlatform defaults if not defined
       def signin_response(options={})
         base_uri IDENTITY
-        get("/signIn", query: extras.merge(options)).fetch('signInResponse') { "Could not authenticate user." }
+        ret = get("/signIn", query: extras.merge(options))
+        if options[:form] == 'json'
+          ret.fetch('signInResponse') { ret }
+        elsif options[:form] == 'xml'
+          ret.fetch('signInResponse'){ ret }.fetch('return'){ ret }
+        else
+          ret
+        end
       end
 
       # Return only the Token as a String
       def token(options={})
-        token = signin_response(options)
-        token.fetch('token') { "Could not authenticate user." }
+        ret = signin_response(options)
+        ret.fetch('token') { ret }
       end
 
       # Invalidate a given Token

@@ -23,13 +23,29 @@ describe ThePlatform::Identity do
                "username" => userName,
                "_duration" => duration }
 
-    @response = { "signInResponse" => {
-                  "userName" => userName,
-                  "duration" => time,
-                  "token" => token,
-                  "userId" => userId,
-                  "idleTimeout" => time }
-                }
+    @json_response = { "signInResponse" => {
+                         "userName" => userName,
+                         "duration" => time,
+                         "token" => token,
+                         "userId" => userId,
+                         "idleTimeout" => time }
+                     }
+
+    @xml_response = { "signInResponse" => {
+                        "return" => {
+                          "userName" => userName,
+                          "duration" => time,
+                          "token" => token,
+                          "userId" => userId,
+                          "idleTimeout" => time }
+                        }
+                    }
+    @error_response = { "exception"=>  {
+                          "title"=>"com.theplatform.module.exception.BadParameterException",
+                          "description"=>"'atom' is not a valid value for form.",
+                          "responseCode"=>"400",
+                          "correlationId"=>"a71ec0cc-de0b-4614-852b-84a152ac6569" }
+                      }
 
   end
 
@@ -43,9 +59,7 @@ describe ThePlatform::Identity do
 
   describe "#signin_response" do
 
-      # stub "valid credentials" identity call
       before(:each) do
-        # reset anything from previous tests
         WebMock.reset!
         stub_request(:get, @signInURL).with(:query => @query).to_return(:body => {}, :status => 200, :headers => {})
       end
@@ -57,9 +71,22 @@ describe ThePlatform::Identity do
              .with(:query => hash_including(@query))
     end
 
-    it "should return a Hash with signIn information" do
-      ThePlatform::Identity.stub(:get) { @response }
-      ThePlatform::Identity.signin_response.should == @response['signInResponse']
+    it "should return signIn information with json response" do
+      ThePlatform::Identity.stub(:get) { @json_response }
+      res = ThePlatform::Identity.signin_response(form:'json')
+      res.should == @json_response['signInResponse']
+    end
+
+    it "should return signIn information with xml response" do
+      ThePlatform::Identity.stub(:get) { @xml_response }
+      res = ThePlatform::Identity.signin_response(form:'xml')
+      res.should == @xml_response['signInResponse']['return']
+    end
+
+    it "should return Error if bad username/password specified" do
+      ThePlatform::Identity.stub(:get) { @error_response }
+      res = ThePlatform::Identity.signin_response(form:'atom')
+      res.should == @error_response
     end
 
     it "should bubble up any exception" do
@@ -75,8 +102,8 @@ describe ThePlatform::Identity do
   describe "#token" do
 
     it "should return only the :token from #signin_response" do
-      ThePlatform::Identity.stub(:signin_response) { @response['signInResponse'] }
-      puts ThePlatform::Identity.token(@query).should == @response['signInResponse']['token']
+      ThePlatform::Identity.stub(:signin_response) { @json_response['signInResponse'] }
+      ThePlatform::Identity.token(@query).should == @json_response['signInResponse']['token']
     end
 
   end
