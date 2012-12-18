@@ -2,9 +2,51 @@ require 'spec_helper'
 
 describe ThePlatform::Identity do
 
-  # clear webmock stubs before each test
   before(:each) do
     WebMock.reset!
+
+    duration = ""
+    idleTimeout = ""
+    userName = "user"
+    password = "secret"
+    form = "json"
+    schema = "1.0"
+    time = 1111111
+    token = '1nb2wzDV8Pd5eGDJhZjRgRBdkEDgsJDm'
+    userId = 'https://identity.auth.theplatform.com/idm/data/User/mps/1111'
+
+    @signInURL = ThePlatform::IDENTITY + 'signIn'
+
+    @query = { "form" => form,
+               "password" => password,
+               "schema" => schema,
+               "username" => userName,
+               "_duration" => duration }
+
+    @json_response = { "signInResponse" => {
+                         "userName" => userName,
+                         "duration" => time,
+                         "token" => token,
+                         "userId" => userId,
+                         "idleTimeout" => time }
+                     }
+
+    @xml_response = { "signInResponse" => {
+                        "return" => {
+                          "userName" => userName,
+                          "duration" => time,
+                          "token" => token,
+                          "userId" => userId,
+                          "idleTimeout" => time }
+                        }
+                    }
+    @error_response = { "exception"=>  {
+                          "title"=>"com.theplatform.module.exception.BadParameterException",
+                          "description"=>"'atom' is not a valid value for form.",
+                          "responseCode"=>"400",
+                          "correlationId"=>"a71ec0cc-de0b-4614-852b-84a152ac6569" }
+                      }
+
   end
 
   describe 'default attributes' do
@@ -15,44 +57,37 @@ describe ThePlatform::Identity do
 
   end
 
-  describe "#token" do
+  describe "#signin_response" do
 
-      # stub "valid credentials" identity call
       before(:each) do
-        # reset anything from previous tests
-        WebMock.reset!
-
-        #setup a normal response
-        @duration = ""
-        @idleTimeout = ""
-        @userName = "user"
-        @password = "secret"
-        @form = "json"
-        @schema = "1.0"
-
-        @signInURL = ThePlatform::IDENTITY + 'signIn'
-
-        @query = { "form" => @form,
-                  "password" => @password,
-                  "schema" => @schema,
-                  "username" => @userName,
-                  "_duration" => @duration }
-
-        stub_request(:get, @signInURL).with(:query => @query).to_return(:status => 200, :body => {}, :headers => {})
+        stub_request(:get, @signInURL)
+                    .with(:query => @query)
+                    .to_return(:body => {}, :status => 200, :headers => {})
       end
 
     it "should call signIn endpoint with parameters" do
-      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema, _duration: @duration)
+      ThePlatform::Identity.stub(:signin_response) { HTTParty.get(@signInURL, query: @query) }
+      ThePlatform::Identity.signin_response(@query)
       WebMock.should have_requested(:get, @signInURL)
-             .with(:query => hash_including({"username" => @userName,
-                                             "password" => @password,
-                                             "form" => @form,
-                                             "schema" => @schema,
-                                             "_duration" => @duration}))
+             .with(:query => hash_including(@query))
     end
 
-    it "should return a HTTParty::Response from the web request" do
-      ThePlatform::Identity.token(username: @userName, password: @password, form: @form, schema: @schema, _duration: @duration).class.should == HTTParty::Response
+    it "should return signIn information with json response" do
+      ThePlatform::Identity.stub(:get) { @json_response }
+      res = ThePlatform::Identity.signin_response(form:'json')
+      res.should == @json_response['signInResponse']
+    end
+
+    it "should return signIn information with xml response" do
+      ThePlatform::Identity.stub(:get) { @xml_response }
+      res = ThePlatform::Identity.signin_response(form:'xml')
+      res.should == @xml_response['signInResponse']['return']
+    end
+
+    it "should return Error if bad username/password specified" do
+      ThePlatform::Identity.stub(:get) { @error_response }
+      res = ThePlatform::Identity.signin_response(form:'atom')
+      res.should == @error_response
     end
 
     it "should bubble up any exception" do
@@ -60,7 +95,16 @@ describe ThePlatform::Identity do
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
 
-      expect {ThePlatform::Identity.token(username: @userName, password: @password, from: @form, schema: @schema)}.to raise_error(Exception)
+      expect {ThePlatform::Identity.signin_response(@query)}.to raise_error(Exception)
+    end
+
+  end
+
+  describe "#token" do
+
+    it "should return only the :token from #signin_response" do
+      ThePlatform::Identity.stub(:signin_response) { @json_response['signInResponse'] }
+      ThePlatform::Identity.token(@query).should == @json_response['signInResponse']['token']
     end
 
   end
@@ -71,8 +115,6 @@ describe ThePlatform::Identity do
     end
 
     before(:each) do
-      WebMock.reset!
-
       stub_request(:any, @signOutURL)
                   .with(:query => hash_including({}))
                   .to_return(:status => 200, :body => {}, :headers => {})
@@ -80,9 +122,7 @@ describe ThePlatform::Identity do
 
     it "should call signOut endpoint with parameters" do
       @token = 'foo'
-
       ThePlatform::Identity.invalidate!(@token)
-
       WebMock.should have_requested(:get, @signOutURL)
              .with(:query => hash_including({"_token" => @token}))
     end
@@ -95,7 +135,6 @@ describe ThePlatform::Identity do
       stub_request(:any, @signOutURL)
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
-
       expect {ThePlatform::Identity.invalidate!(@token)}.to raise_error(Exception)
     end
 
@@ -107,8 +146,6 @@ describe ThePlatform::Identity do
     end
 
     before(:each) do
-      WebMock.reset!
-
       stub_request(:any, @getTokenCountURL)
                   .with(:query => hash_including({}))
                   .to_return(:status => 200, :body => {}, :headers => {})
@@ -116,7 +153,6 @@ describe ThePlatform::Identity do
 
     it "should call getTokenCount endpoint with parameters" do
       ThePlatform::Identity.count(foo: 'bar')
-
       WebMock.should have_requested(:get, @getTokenCountURL)
              .with(:query => hash_including({"foo" => 'bar'}))
     end
@@ -129,7 +165,6 @@ describe ThePlatform::Identity do
       stub_request(:any, @getTokenCountURL)
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
-
       expect {ThePlatform::Identity.count(foo:'bar')}.to raise_error(Exception)
     end
 

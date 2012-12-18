@@ -51,9 +51,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).get(object, 'all')
-
         WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
                .with(:query => hash_including({}))
       end
@@ -65,9 +63,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:post, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).post(object, 'all')
-
         WebMock.should have_requested(:post, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
                .with(:query => hash_including({}))
       end
@@ -79,9 +75,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:put, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).put(object, 'all')
-
         WebMock.should have_requested(:put, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
                .with(:query => hash_including({}))
       end
@@ -94,9 +88,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:delete, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object + "/" + objectId)
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).delete(object, objectId)
-
         WebMock.should have_requested(:delete, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object + "/" + objectId)
                .with(:query => hash_including({}))
       end
@@ -107,9 +99,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "notify")
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).notify(token:'Nez8Y9ScVDxPxLDmUsg_ESCDYJCJwPBk', size:'10', since:'11111111')
-
         WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'notify')
                .with(:query => hash_including({}))
       end
@@ -122,9 +112,7 @@ describe ThePlatform::Data do
         stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
                     .with(:query => hash_including({}))
                     .to_raise(Exception)
-
         expect{ThePlatform::Data.send(service).get(object, 'all')}.to raise_error(Exception)
-
         WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
                .with(:query => hash_including({}))
       end
@@ -137,9 +125,7 @@ describe ThePlatform::Data do
         WebMock.reset!
         stub_request(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + "data/" + object)
                     .with(:query => hash_including({}))
-
         ThePlatform::Data.send(service).get(object, 'all')
-
         WebMock.should have_requested(:get, ThePlatform.const_get(:SERVICE)[service][:endpoint] + 'data/' + object)
                .with(:query => hash_including({}), :headers => {"User-Agent" => "tpdata/#{version}"})
       end
