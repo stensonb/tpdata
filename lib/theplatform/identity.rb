@@ -24,9 +24,9 @@ module ThePlatform
       def signin_response(options={})
         base_uri IDENTITY
         ret = get("/signIn", query: extras.merge(options))
-        if options[:form] == 'json'
+        if options[:form] =~ /json/i
           ret.fetch('signInResponse') { ret }
-        elsif options[:form] == 'xml'
+        elsif options[:form] =~ /xml/i
           ret.fetch('signInResponse'){ ret }.fetch('return'){ ret }
         else
           ret
