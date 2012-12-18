@@ -60,8 +60,9 @@ describe ThePlatform::Identity do
   describe "#signin_response" do
 
       before(:each) do
-        WebMock.reset!
-        stub_request(:get, @signInURL).with(:query => @query).to_return(:body => {}, :status => 200, :headers => {})
+        stub_request(:get, @signInURL)
+                    .with(:query => @query)
+                    .to_return(:body => {}, :status => 200, :headers => {})
       end
 
     it "should call signIn endpoint with parameters" do
@@ -114,8 +115,6 @@ describe ThePlatform::Identity do
     end
 
     before(:each) do
-      WebMock.reset!
-
       stub_request(:any, @signOutURL)
                   .with(:query => hash_including({}))
                   .to_return(:status => 200, :body => {}, :headers => {})
@@ -123,9 +122,7 @@ describe ThePlatform::Identity do
 
     it "should call signOut endpoint with parameters" do
       @token = 'foo'
-
       ThePlatform::Identity.invalidate!(@token)
-
       WebMock.should have_requested(:get, @signOutURL)
              .with(:query => hash_including({"_token" => @token}))
     end
@@ -138,7 +135,6 @@ describe ThePlatform::Identity do
       stub_request(:any, @signOutURL)
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
-
       expect {ThePlatform::Identity.invalidate!(@token)}.to raise_error(Exception)
     end
 
@@ -150,8 +146,6 @@ describe ThePlatform::Identity do
     end
 
     before(:each) do
-      WebMock.reset!
-
       stub_request(:any, @getTokenCountURL)
                   .with(:query => hash_including({}))
                   .to_return(:status => 200, :body => {}, :headers => {})
@@ -159,7 +153,6 @@ describe ThePlatform::Identity do
 
     it "should call getTokenCount endpoint with parameters" do
       ThePlatform::Identity.count(foo: 'bar')
-
       WebMock.should have_requested(:get, @getTokenCountURL)
              .with(:query => hash_including({"foo" => 'bar'}))
     end
@@ -172,7 +165,6 @@ describe ThePlatform::Identity do
       stub_request(:any, @getTokenCountURL)
                   .with(:query => hash_including({}))
                   .to_raise(Exception)
-
       expect {ThePlatform::Identity.count(foo:'bar')}.to raise_error(Exception)
     end
 
