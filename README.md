@@ -16,10 +16,6 @@ HTTParty ~> 0.9.0
 
     gem install tpdata
 
-or
-
-    gem build theplatform.gemspec
-
 ## USAGE:
 
 To add Tpdata gem:
@@ -49,9 +45,9 @@ The boolean methods #parameters? is also available to query if all params are se
     => true
 
 ### Tokens
-To request a token:
+To request a token response body:
 
-    ThePlatform::Identity.token(username:'your_username', password:'your_password',schema:'1.0',form:'json')
+    ThePlatform::Identity.signin_response(username:'your_username', password:'your_password',schema:'1.0',form:'json')
     => {"signInResponse"=>
     {"userName"=>"your_username",
     "duration"=>315360000000,
@@ -62,23 +58,30 @@ To request a token:
 
 Note that you can also set _duration and _idleTimeout as well.  Visit http://help.theplatform.com for more information.
 
+Using the #token method instead of the #signin_response method will return ONLY the new token.
+
 ### Data Services
-A list of endpoints and valid objects are available at http://help.theplatform.com.  Internally, they are listed in the lib/theplatform/services.rb file.
+For a list of services, query with:
+
+    ThePlatform::Data.services
+
+to return an Array of the available services to query.
+An online list of endpoints and valid objects are available at http://help.theplatform.com.
 
 In this example, we're going to build a query for the Media Data Service (MDS):
 
     media = ThePlatform::Data.mds
-     @endpoint="http://data.media.theplatform.com/media/data/",
-     @objects=
-      [:AccountSettings,
-       :AssetType,
-       :Category,
-       :Media,
-       :MediaDefaults,
-       :MediaFile,
-       :Provider,
-       :Release,
-       :Server]>
+     => @endpoint="http://data.media.theplatform.com/media/data/",
+        @objects=
+         [:AccountSettings,
+         :AssetType,
+         :Category,
+         :Media,
+         :MediaDefaults,
+         :MediaFile,
+         :Provider,
+         :Release,
+         :Server]>
 
 The return value for any Service Object is its endpoint and the available objects.
 To build the query for a GET:
@@ -112,6 +115,6 @@ The Notify endpoint is supported as well.
 
 ## LICENSE:
 
-MIT License (c) 2012 Ben Woodall
+This Gem is not a product of thePlatform for Media.
 
 Fork it. Fix it. Push it. Pull it.
