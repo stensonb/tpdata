@@ -17,11 +17,11 @@ describe ThePlatform::Identity do
 
     @signInURL = ThePlatform::IDENTITY + 'signIn'
 
-    @query = { "form" => form,
-               "password" => password,
-               "schema" => schema,
-               "username" => userName,
-               "_duration" => duration }
+    @query = { :form => form,
+               :password => password,
+               :schema => schema,
+               :username => userName,
+               :_duration => duration }
 
     @json_response = { "signInResponse" => {
                          "userName" => userName,

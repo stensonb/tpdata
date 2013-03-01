@@ -35,10 +35,11 @@ module ThePlatform
 
       # Return only the Token as a String
       def token(options={})
-        options['form'] = 'json'
-        options['schema'] = '1.0' if options['schema'].nil?
+        options[:form] = 'json'
+        options.delete("form") if options.has_key?("form")
+        options[:schema] = '1.0' if options[:schema].nil?
         ret = signin_response(options)
-        ret["signInResponse"]["token"]
+        ret.fetch('token') { ret }
       end
 
       # Invalidate a given Token
