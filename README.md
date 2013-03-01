@@ -58,6 +58,10 @@ To request a token response body:
 
 Note that you can also set _duration and _idleTimeout as well.  Visit http://help.theplatform.com for more information.
 
+Alternatively, you can simply call the .token() method to get a token strin back:
+
+    ThePlatform::Identity.token(username:'your_username', password:'your_password')
+
 Using the #token method instead of the #signin_response method will return ONLY the new token.
 
 ### Data Services
