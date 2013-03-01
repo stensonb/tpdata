@@ -17,11 +17,11 @@ describe ThePlatform::Identity do
 
     @signInURL = ThePlatform::IDENTITY + 'signIn'
 
-    @query = { "form" => form,
-               "password" => password,
-               "schema" => schema,
-               "username" => userName,
-               "_duration" => duration }
+    @query = { :form => form,
+               :password => password,
+               :schema => schema,
+               :username => userName,
+               :_duration => duration }
 
     @json_response = { "signInResponse" => {
                          "userName" => userName,
@@ -101,6 +101,34 @@ describe ThePlatform::Identity do
   end
 
   describe "#token" do
+
+    it "should always set form=json" do
+      creds = {'username' => 'user', 'password' => 'secret'}
+      all_request_params = creds.merge({'form' => 'json'})
+
+      stub = stub_http_request(:get, @signInURL)
+             .with(:query => hash_including(all_request_params))
+
+      ThePlatform::Identity.token(creds)
+      ThePlatform::Identity.token(creds.merge({'form' => 'xml'}))
+
+      stub.should have_been_requested.times(2)
+    end
+
+    it "should set schema=1.0 only if omitted" do
+      creds = {'username' => 'user', 'password' => 'secret'}
+
+      stub = stub_http_request(:get, @signInURL)
+             .with(:query => hash_including(creds.merge({'schema' => '1.0'})))
+
+      ThePlatform::Identity.token(creds)
+
+      stub = stub_http_request(:get, @signInURL)
+             .with(:query => hash_including(creds.merge({'schema' => '2.0'})))
+
+      ThePlatform::Identity.token(creds.merge({'schema' => '2.0'}))
+
+    end
 
     it "should return only the :token from #signin_response" do
       ThePlatform::Identity.stub(:signin_response) { @json_response['signInResponse'] }

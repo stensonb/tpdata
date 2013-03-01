@@ -35,6 +35,9 @@ module ThePlatform
 
       # Return only the Token as a String
       def token(options={})
+        options[:form] = 'json'
+        options.delete("form") if options.has_key?("form")
+        options[:schema] = '1.0' if options[:schema].nil?
         ret = signin_response(options)
         ret.fetch('token') { ret }
       end
