@@ -1,6 +1,6 @@
 # tpdata
 
-[![Build Status](https://travis-ci.org/benwoody/tpdata.png)](https://travis-ci.org/benwoody/tpdata)
+[![Build Status](https://travis-ci.org/stensonb/tpdata.png)](https://travis-ci.org/stensonb/tpdata)
 
 
 ## DESCRIPTION:
