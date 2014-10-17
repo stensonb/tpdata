@@ -1,5 +1,5 @@
 RUBY_ENGINE = 'ruby' unless defined? RUBY_ENGINE
-source :rubygems
+source 'https://rubygems.org'
 gemspec
 
 gem 'rake'
